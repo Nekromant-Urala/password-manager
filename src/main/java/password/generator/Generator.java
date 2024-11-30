@@ -14,7 +14,7 @@ public class Generator {
      * @param quantityUpperCase         количество заглавных символов
      * @param quantitySpecialSymbol     количество специальных символов
      * @param quantityPunctuationSymbol количество символов пунктуации
-     * @param passwordLength            длина пароля. По умолчанию длина пароля равна 16
+     * @param passwordLength            длина пароля
      * @return Возвращает пароль в виде строки
      */
     public static String generatePassword(int quantityDigit, int quantityLowerCase, int quantityUpperCase, int quantitySpecialSymbol, int quantityPunctuationSymbol, int passwordLength) {
@@ -43,7 +43,7 @@ public class Generator {
         if (inputString == null || inputString.isEmpty()) {
             throw new IllegalArgumentException("Invalid inputString");
         }
-        if (quantity <= 0) {
+        if (quantity < 0) {
             throw new IllegalArgumentException("Invalid quantity");
         }
         StringBuilder symbols = new StringBuilder();
