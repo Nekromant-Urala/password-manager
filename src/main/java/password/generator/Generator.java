@@ -8,23 +8,34 @@ import static password.generator.Symbols.*;
 public class Generator {
     private static final SecureRandom secureRandom = new SecureRandom();
 
+    public static String getPassword(int[] generationParameters) {
+        int digit = generationParameters[0];
+        int lowerCase = generationParameters[1];
+        int upperCase = generationParameters[2];
+        int specialSymbol = generationParameters[3];
+        int punctuationSymbol = generationParameters[4];
+        int passwordLength = generationParameters[5];
+
+        return generatePassword(digit, lowerCase, upperCase, specialSymbol, punctuationSymbol, passwordLength);
+    }
+
     /**
-     * @param quantityDigit             количество цифр
-     * @param quantityLowerCase         количество строчных символов
-     * @param quantityUpperCase         количество заглавных символов
-     * @param quantitySpecialSymbol     количество специальных символов
-     * @param quantityPunctuationSymbol количество символов пунктуации
-     * @param passwordLength            длина пароля
+     * @param digit             количество цифр
+     * @param lowerCase         количество строчных символов
+     * @param upperCase         количество заглавных символов
+     * @param specialSymbol     количество специальных символов
+     * @param punctuationSymbol количество символов пунктуации
+     * @param passwordLength    длина пароля
      * @return Возвращает пароль в виде строки
      */
-    public static String generatePassword(int quantityDigit, int quantityLowerCase, int quantityUpperCase, int quantitySpecialSymbol, int quantityPunctuationSymbol, int passwordLength) {
+    private static String generatePassword(int digit, int lowerCase, int upperCase, int specialSymbol, int punctuationSymbol, int passwordLength) {
         StringBuilder passwordBuilder = new StringBuilder(passwordLength);
 
-        passwordBuilder.append(generateRandomString(DIGIT.getSymbols(), quantityDigit));
-        passwordBuilder.append(generateRandomString(CHAR_UPPERCASE.getSymbols(), quantityUpperCase));
-        passwordBuilder.append(generateRandomString(CHAR_LOWERCASE.getSymbols(), quantityLowerCase));
-        passwordBuilder.append(generateRandomString(SPECIAL_SYMBOL.getSymbols(), quantitySpecialSymbol));
-        passwordBuilder.append(generateRandomString(PUNCTUATION_SYMBOL.getSymbols(), quantityPunctuationSymbol));
+        passwordBuilder.append(generateRandomString(DIGIT.getSymbols(), digit));
+        passwordBuilder.append(generateRandomString(CHAR_UPPERCASE.getSymbols(), upperCase));
+        passwordBuilder.append(generateRandomString(CHAR_LOWERCASE.getSymbols(), lowerCase));
+        passwordBuilder.append(generateRandomString(SPECIAL_SYMBOL.getSymbols(), specialSymbol));
+        passwordBuilder.append(generateRandomString(PUNCTUATION_SYMBOL.getSymbols(), punctuationSymbol));
 
         if (passwordBuilder.length() < passwordLength) {
             passwordBuilder.append(generateRandomString(ALL_SYMBOLS.getSymbols(), passwordLength - passwordBuilder.length()));

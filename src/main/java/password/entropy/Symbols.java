@@ -5,7 +5,7 @@ public enum Symbols {
     CHAR_UPPERCASE(26),
     DIGIT(10),
     SPECIAL_SYMBOL(7),
-    PUNCTUATION_SYMBOL(18);
+    PUNCTUATION_SYMBOL(19);
 
     private final int numberOfCharacters;
 

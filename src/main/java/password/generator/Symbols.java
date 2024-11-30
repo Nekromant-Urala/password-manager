@@ -5,7 +5,7 @@ public enum Symbols {
     CHAR_UPPERCASE("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
     DIGIT("0123456789"),
     SPECIAL_SYMBOL("~$^+=<>"),
-    PUNCTUATION_SYMBOL("!@#&()–[{}]:;',?/*"),
+    PUNCTUATION_SYMBOL("!@#&()–[{}]:;',?/*—"),
     ALL_SYMBOLS(CHAR_LOWERCASE.getSymbols()
             + CHAR_UPPERCASE.getSymbols()
             + DIGIT.getSymbols()

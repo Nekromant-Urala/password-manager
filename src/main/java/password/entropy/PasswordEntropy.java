@@ -5,6 +5,17 @@ import static password.entropy.PasswordCategory.*;
 
 public class PasswordEntropy {
 
+    public static String getEntropy(int[] generationParameters){
+        int digit = generationParameters[0];
+        int lowerCase = generationParameters[1];
+        int upperCase = generationParameters[2];
+        int specialSymbol = generationParameters[3];
+        int punctuationSymbol = generationParameters[4];
+        int passwordLength = generationParameters[5];
+
+        return getEntropy(digit, lowerCase, upperCase, specialSymbol, punctuationSymbol, passwordLength);
+    }
+
     /**
      * @param quantityDigit             количество цифр
      * @param quantityLowerCase         количество строчных символов
@@ -14,7 +25,7 @@ public class PasswordEntropy {
      * @param passwordLength            длина пароля
      * @return Возвращает категорию сложности заданного пароля
      */
-    public static String getEntropy(int quantityDigit, int quantityLowerCase, int quantityUpperCase, int quantitySpecialSymbol, int quantityPunctuationSymbol, int passwordLength) {
+    private static String getEntropy(int quantityDigit, int quantityLowerCase, int quantityUpperCase, int quantitySpecialSymbol, int quantityPunctuationSymbol, int passwordLength) {
         int countCharacters = 0;
         if (quantityDigit > 0) {
             countCharacters += DIGIT.gatNumberOfCharacters();
