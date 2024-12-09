@@ -1,4 +1,4 @@
-package password.entropy;
+package manager.generator.passsword.entropy;
 
 public enum PasswordCategory {
     POOR("«плохой пароль»"),

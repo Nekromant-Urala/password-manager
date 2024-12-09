@@ -1,7 +1,7 @@
-package password.entropy;
+package manager.generator.passsword.entropy;
 
-import static password.entropy.Symbols.*;
-import static password.entropy.PasswordCategory.*;
+import static manager.generator.passsword.Symbols.*;
+import static manager.generator.passsword.entropy.PasswordCategory.*;
 
 public class PasswordEntropy {
 
@@ -28,23 +28,23 @@ public class PasswordEntropy {
     private static String getEntropy(int quantityDigit, int quantityLowerCase, int quantityUpperCase, int quantitySpecialSymbol, int quantityPunctuationSymbol, int passwordLength) {
         int countCharacters = 0;
         if (quantityDigit > 0) {
-            countCharacters += DIGIT.gatNumberOfCharacters();
+            countCharacters += DIGIT.getCountChars();
         }
 
         if (quantityLowerCase > 0) {
-            countCharacters += CHAR_LOWERCASE.gatNumberOfCharacters();
+            countCharacters += CHAR_LOWERCASE.getCountChars();
         }
 
         if (quantityUpperCase > 0) {
-            countCharacters += CHAR_UPPERCASE.gatNumberOfCharacters();
+            countCharacters += CHAR_UPPERCASE.getCountChars();
         }
 
         if (quantityPunctuationSymbol > 0) {
-            countCharacters += PUNCTUATION_SYMBOL.gatNumberOfCharacters();
+            countCharacters += PUNCTUATION_SYMBOL.getCountChars();
         }
 
         if (quantitySpecialSymbol > 0) {
-            countCharacters += SPECIAL_SYMBOL.gatNumberOfCharacters();
+            countCharacters += SPECIAL_SYMBOL.getCountChars();
         }
 
         double entropy = passwordLength * (Math.log(countCharacters) / Math.log(2));
