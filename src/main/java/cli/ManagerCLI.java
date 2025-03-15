@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class ManagerCLI {
     public static void main(String[] args) {
-//        GeneratorSalt generatorSalt = new GeneratorSalt();
-//        SaveData.saveSalt(generatorSalt.getSalt());
+        GeneratorSalt generatorSalt = new GeneratorSalt();
+        SaveData.saveSalt(generatorSalt.getSalt());
         boolean bFlag = run();
         while (bFlag) {
             bFlag = run();
