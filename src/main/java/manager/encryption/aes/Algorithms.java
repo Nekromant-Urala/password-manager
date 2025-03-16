@@ -1,4 +1,4 @@
-package manager.encryption;
+package manager.encryption.aes;
 
 public enum Algorithms {
     PBKDF2WithHmacSHA256("PBKDF2WithHmacSHA256"),

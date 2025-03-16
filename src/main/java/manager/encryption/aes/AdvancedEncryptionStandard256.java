@@ -1,4 +1,4 @@
-package manager.encryption;
+package manager.encryption.aes;
 
 import manager.storage.SaveData;
 
@@ -15,9 +15,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
-import static manager.encryption.Algorithms.*;
-import static manager.encryption.SpecificationAES.ITERATION_COUNT;
-import static manager.encryption.SpecificationAES.KEY_LENGTH;
+import static manager.encryption.aes.Algorithms.*;
+import static manager.encryption.aes.SpecificationAES.ITERATION_COUNT;
+import static manager.encryption.aes.SpecificationAES.KEY_LENGTH;
 
 public class AdvancedEncryptionStandard256 {
 

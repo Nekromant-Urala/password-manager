@@ -1,4 +1,4 @@
-package manager.encryption;
+package manager.encryption.aes;
 
 public enum SpecificationAES {
     KEY_LENGTH(256),
