@@ -1,4 +1,4 @@
-package manager.encryption.sss.GF256;
+package manager.encryption.GF256;
 
 import static java.lang.Byte.toUnsignedInt;
 
@@ -146,9 +146,12 @@ public class GF256 {
         return EXP[toUnsignedInt(LOG[toUnsignedInt(a)]) + toUnsignedInt(LOG[toUnsignedInt(b)])];
     }
 
+    public byte inverse(byte a) {
+        return EXP[255 - toUnsignedInt(LOG[toUnsignedInt(a)])];
+    }
+
     public byte div(byte a, byte b) {
-        // multiply by the inverse of b
-        return mul(a, EXP[255 - toUnsignedInt(LOG[toUnsignedInt(b)])]);
+        return mul(a, inverse(b));
     }
 
     public int degree(byte[] p) {

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import manager.encryption.sss.GF256.GF256;
+import manager.encryption.GF256.GF256;
 
 public class ShamirSecretSharingGF256 {
 
@@ -20,18 +20,14 @@ public class ShamirSecretSharingGF256 {
     }
 
     public Map<Integer, byte[]> split(byte[] secret) {
-        // generate part values
         final byte[][] values = new byte[n][secret.length];
         for (int i = 0; i < secret.length; i++) {
-            // for each byte, generate a random polynomial, p
             final byte[] p = generate(k - 1, secret[i]);
             for (int x = 1; x <= n; x++) {
-                // each part's byte is p(partId)
                 values[x - 1][i] = eval(p, (byte) x);
             }
         }
 
-        // return as a set of objects
         final Map<Integer, byte[]> parts = new HashMap<>(n);
         for (int i = 0; i < values.length; i++) {
             parts.put(i + 1, values[i]);
@@ -56,7 +52,6 @@ public class ShamirSecretSharingGF256 {
     }
 
     private static byte eval(byte[] p, byte x) {
-        // Horner's method
         byte result = 0;
         for (int i = p.length - 1; i >= 0; i--) {
             result = GF_256.add(GF_256.mul(result, x), p[i]);
@@ -66,20 +61,15 @@ public class ShamirSecretSharingGF256 {
 
     private static byte[] generate(int degree, byte x) {
         final byte[] p = new byte[degree + 1];
-
-        // generate random polynomials until we find one of the given degree
         do {
-            ShamirSecretSharingGF256.SECURE_RANDOM.nextBytes(p);
+            SECURE_RANDOM.nextBytes(p);
         } while (GF_256.degree(p) != degree);
 
-        // set y intercept
         p[0] = x;
-
         return p;
     }
 
     private static byte interpolate(byte[][] points) {
-        // calculate f(0) of the given points using Lagrangian interpolation
         final byte x = 0;
         byte y = 0;
         for (int i = 0; i < points.length; i++) {
