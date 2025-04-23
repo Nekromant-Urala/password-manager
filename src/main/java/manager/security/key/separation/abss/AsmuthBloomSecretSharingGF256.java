@@ -1,15 +1,14 @@
-package manager.encryption.abss;
+package manager.security.key.separation.abss;
 
 
-import manager.encryption.GF256.GF256;
+import manager.security.key.separation.GF256.GF256;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
 
 public class AsmuthBloomSecretSharingGF256 {
-
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    private static final GF256 GF_256 = GF256.getInstance();
+    private static final GF256 GF_256 = new GF256();
     private final int n;
     private final int t;
 

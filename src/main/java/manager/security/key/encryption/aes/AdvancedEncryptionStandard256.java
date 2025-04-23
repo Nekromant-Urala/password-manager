@@ -1,4 +1,4 @@
-package manager.encryption.aes;
+package manager.security.key.encryption.aes;
 
 import manager.storage.SaveData;
 
@@ -15,9 +15,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
-import static manager.encryption.aes.Algorithms.*;
-import static manager.encryption.aes.SpecificationAES.ITERATION_COUNT;
-import static manager.encryption.aes.SpecificationAES.KEY_LENGTH;
+import static manager.security.key.encryption.aes.Specification.*;
 
 public class AdvancedEncryptionStandard256 {
 
@@ -26,7 +24,7 @@ public class AdvancedEncryptionStandard256 {
      * Метод для шифрования заданной строки.
      *
      * @param strToEncrypt строка, которую необходимо зашифровать.
-     * @param password ключевое слово для генерации ключа для алгоритма.
+     * @param password ключевое слово для генерации ключа.
      * @return Возвращает зашифрованную строку в кодировке Base64.
      */
     public static String encrypt(String strToEncrypt, String password) {
@@ -37,7 +35,7 @@ public class AdvancedEncryptionStandard256 {
             IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
 
             SecretKeySpec secretKey = createSecretKey(password);
-            Cipher cipher = Cipher.getInstance(AES_MODE.getNameAlgorithm());
+            Cipher cipher = Cipher.getInstance(AES_MODE.getSpec());
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec);
 
             byte[] cipherText = cipher.doFinal(strToEncrypt.getBytes(StandardCharsets.UTF_8));
@@ -69,7 +67,7 @@ public class AdvancedEncryptionStandard256 {
             IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
 
             SecretKeySpec secretKey = createSecretKey(password);
-            Cipher cipher = Cipher.getInstance(AES_MODE.getNameAlgorithm());
+            Cipher cipher = Cipher.getInstance(AES_MODE.getSpec());
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec);
 
             byte[] cipherText = new byte[encryptedData.length - 16];
@@ -94,9 +92,9 @@ public class AdvancedEncryptionStandard256 {
      */
     private static SecretKeySpec createSecretKey(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] salt = Base64.getDecoder().decode(SaveData.getSaltFromFile());
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(PBKDF2WithHmacSHA256.getNameAlgorithm());
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(PBKDF2WithHmacSHA256.getSpec());
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT.getNumber(), KEY_LENGTH.getNumber());
         javax.crypto.SecretKey tmp = factory.generateSecret(spec);
-        return new SecretKeySpec(tmp.getEncoded(), AES.getNameAlgorithm());
+        return new SecretKeySpec(tmp.getEncoded(), AES.getSpec());
     }
 }

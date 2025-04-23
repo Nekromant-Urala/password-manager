@@ -1,4 +1,4 @@
-package manager.encryption.abss;
+package manager.security.key.separation.abss;
 
 import java.math.BigInteger;
 

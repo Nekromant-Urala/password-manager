@@ -1,4 +1,4 @@
-package manager.encryption.abss;
+package manager.security.key.separation.abss;
 
 
 import java.math.BigInteger;
@@ -8,36 +8,50 @@ public class AsmuthBloomSecretSharingGFP {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private final int n;
-    private final int t;
+    private final int m;
 
-    public AsmuthBloomSecretSharingGFP(int n, int t) {
+    public AsmuthBloomSecretSharingGFP(int m, int n) {
         this.n = n;
-        this.t = t;
+        this.m = m;
     }
 
-    public ShareGFP[] splitSecret(byte[] secret) {
+    /**
+     * Метод, разбивающий входную строку на доли
+     *
+     * @param secret исходный секрет, который необходимо разбить на доли
+     * @return Возвращает неизменяемую Map, где ключ это порядковый номер, а значение доля секрета
+     */
+    public ShareGFP[] split(byte[] secret) {
         BigInteger s = new BigInteger(secret);
         BigInteger p = BigInteger.probablePrime(s.bitLength() + 10, SECURE_RANDOM);
         BigInteger[] d = generatePrimes(p, n);
-        BigInteger sDash = getsDash(d, p, s);
+        BigInteger secretDash = getSecretDash(d, p, s);
 
         ShareGFP[] shares = new ShareGFP[n];
         for (int i = 0; i < n; i++) {
-            BigInteger k = sDash.mod(d[i]);
+            BigInteger k = secretDash.mod(d[i]);
             shares[i] = new ShareGFP(p, d[i], k);
         }
         return shares;
     }
 
-    private BigInteger getsDash(BigInteger[] d, BigInteger p, BigInteger s) {
+    /**
+     * Метод для получения секрета со штрихом
+     *
+     * @param d
+     * @param p
+     * @param s
+     * @return
+     */
+    private BigInteger getSecretDash(BigInteger[] d, BigInteger p, BigInteger s) {
         BigInteger leftPart = BigInteger.ONE;
 
-        for (int i = 0; i < t; i++) {
+        for (int i = 0; i < m; i++) {
             leftPart = leftPart.multiply(d[i]);
         }
 
         BigInteger rightPart = p;
-        for (int i = n - t + 1; i < n; i++) {
+        for (int i = n - m + 1; i < n; i++) {
             rightPart = rightPart.multiply(d[i]);
         }
 
@@ -54,6 +68,13 @@ public class AsmuthBloomSecretSharingGFP {
         return sDash;
     }
 
+    /**
+     * Метод для генерации простых чисел
+     *
+     * @param p
+     * @param n
+     * @return
+     */
     private static BigInteger[] generatePrimes(BigInteger p, int n) {
         BigInteger[] primes = new BigInteger[n];
         int bitLength = p.bitLength() + 10;
@@ -64,7 +85,13 @@ public class AsmuthBloomSecretSharingGFP {
         return primes;
     }
 
-    public byte[] recoverSecret(ShareGFP... shares) {
+    /**
+     * Метод, позволяющий восстановить исходный секрет из k долей.
+     *
+     * @param shares
+     * @return
+     */
+    public byte[] join(ShareGFP... shares) {
         BigInteger p = shares[0].getP();
         BigInteger[] remainders = new BigInteger[shares.length];
         BigInteger[] modules = new BigInteger[shares.length];
@@ -79,6 +106,13 @@ public class AsmuthBloomSecretSharingGFP {
         return s.toByteArray();
     }
 
+    /**
+     * Метод, реализующий китайскую теорему об остатках
+     *
+     * @param remainders
+     * @param modules
+     * @return
+     */
     private static BigInteger crt(BigInteger[] remainders, BigInteger[] modules) {
         BigInteger module = BigInteger.ONE;
         for (BigInteger i : modules) {

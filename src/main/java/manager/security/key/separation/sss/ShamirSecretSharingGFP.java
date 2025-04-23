@@ -1,4 +1,4 @@
-package manager.encryption.sss;
+package manager.security.key.separation.sss;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ShamirSecretSharingGFP {
-
     private static final BigInteger PRIME = new BigInteger(512, 1, new SecureRandom());
     private static final SecureRandom random = new SecureRandom();
     private final int minimumKey;

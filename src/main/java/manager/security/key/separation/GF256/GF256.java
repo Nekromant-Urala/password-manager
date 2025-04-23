@@ -1,21 +1,8 @@
-package manager.encryption.GF256;
+package manager.security.key.separation.GF256;
 
 import static java.lang.Byte.toUnsignedInt;
 
 public class GF256 {
-    private static GF256 INSTANCE;
-
-    private GF256() {
-    }
-
-    // не потокобезопасно
-    public static GF256 getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new GF256();
-        }
-        return INSTANCE;
-    }
-
     private static final byte[] LOG = {
             (byte) 0xff, (byte) 0x00, (byte) 0x19, (byte) 0x01, (byte) 0x32, (byte) 0x02, (byte) 0x1a,
             (byte) 0xc6, (byte) 0x4b, (byte) 0xc7, (byte) 0x1b, (byte) 0x68, (byte) 0x33, (byte) 0xee,

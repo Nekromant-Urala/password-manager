@@ -1,4 +1,4 @@
-package manager.encryption.abss;
+package manager.security.key.separation.abss;
 
 public class ShareGF256 {
     private final byte d;
