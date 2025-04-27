@@ -1,6 +1,6 @@
 package manager.storage;
 
-import manager.encryption.AdvancedEncryptionStandard256;
+import manager.security.key.encryption.aes.AdvancedEncryptionStandard256;
 
 import java.io.*;
 
