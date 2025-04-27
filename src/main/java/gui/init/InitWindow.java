@@ -81,7 +81,7 @@ public class InitWindow extends Application {
         Button createDatabase = new Button("Создать базу данных");
         HBox leftBox = new HBox(10, createDatabase);
         leftBox.setAlignment(Pos.CENTER_LEFT);
-        createDatabase.setOnAction(e -> CreateDBWindow.showCreateDbWindow(primaryStage));
+        createDatabase.setOnAction(e -> CreateDBWindow.createWindow(primaryStage));
 
         // Кнопки OK и Отмена - справа
         Button okButton = new Button("OK");
