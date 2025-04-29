@@ -31,7 +31,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.ural.gui.init.InitWindow</mainClass>
+                            <mainClass>com.ural.com.ural.MainApp</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
