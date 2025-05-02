@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 
 public class InitialWindow implements Window {
-    private static final EventHandlerInitWindow handler = new EventHandlerInitWindow();
+    private static final EventHandlerInitialWindow handler = new EventHandlerInitialWindow();
 
     @Override
     public void createWindow(Stage owner) {
@@ -53,12 +53,12 @@ public class InitialWindow implements Window {
         // Кнопка выбора файла
         Button browseButton = new Button("Обзор...");
         browseButton.setPrefSize(70, keyFileField.getPrefHeight());
-        browseButton.setOnAction(e -> handler.browseButtonHandler(owner, keyFileField));
+        browseButton.setOnAction(e -> handler.browseButton(owner, keyFileField));
 
         // Кнопка показа/скрытия пароля
         Button showHideButton = new Button("Показать");
         showHideButton.setPrefSize(browseButton.getPrefWidth(), masterPassField.getPrefHeight());
-        showHideButton.setOnAction(e -> handler.showHideButtonHandler(showHideButton, masterPassField, visiblePasswordField));
+        showHideButton.setOnAction(e -> handler.showHideButton(showHideButton, masterPassField, visiblePasswordField));
 
         // Горизонтальный контейнер для кнопки и поля ввода пароля
         HBox passwordContainer = new HBox(10);
@@ -82,15 +82,15 @@ public class InitialWindow implements Window {
         Button createDatabase = new Button("Создать базу данных");
         HBox leftBox = new HBox(10, createDatabase);
         leftBox.setAlignment(Pos.CENTER_LEFT);
-        createDatabase.setOnAction(e -> handler.createDatabaseButtonHandler(owner));
+        createDatabase.setOnAction(e -> handler.createDatabaseButton(owner));
 
         // Кнопки OK и Отмена - справа
         Button okButton = new Button("OK");
         Button cancelButton = new Button("Отмена");
         HBox rightBox = new HBox(10, okButton, cancelButton);
         rightBox.setAlignment(Pos.CENTER_LEFT);
-        okButton.setOnAction(e -> handler.okButtonHandler(owner, masterPassField, visiblePasswordField));
-        cancelButton.setOnAction(e -> handler.cancelButtonHandler(owner));
+        okButton.setOnAction(e -> handler.okButton(owner, masterPassField, visiblePasswordField));
+        cancelButton.setOnAction(e -> handler.cancelButton(owner));
 
         // Размещаем элементы в BorderPane
         buttonContainer.setLeft(leftBox);

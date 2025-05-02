@@ -21,7 +21,7 @@ public class EventHandlerDBWindow implements EventHandler {
      * @param owner
      * @param keyFileField
      */
-    void browseButtonHandler(Stage owner, TextField keyFileField) {
+    void browseButton(Stage owner, TextField keyFileField) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Выберите ключевую директорию");
 
@@ -32,18 +32,38 @@ public class EventHandlerDBWindow implements EventHandler {
         }
     }
 
-    void okButtonHandler(Stage owner, Button button) {
+    void okButton(Stage owner, Button button) {
 
         System.out.println("Урааа");
         owner.close();
     }
 
-    void checkPasswordField(PasswordField passwordField, TextField visiblePasswordField,  PasswordField passwordConfirmField, TextField nameFileField, TextField pathFileField) {
+    void checkPasswordField(PasswordField passwordField, TextField visiblePasswordField, PasswordField passwordConfirmField, TextField nameFileField, TextField pathFileField, Button button) {
         ChangeListener<String> listener = (obs, oldValue, newValue) -> {
-//            boolean
+            String password = passwordField.getText().isEmpty()
+                    ? visiblePasswordField.getText()
+                    : passwordField.getText();
+
+            String confirmPassword = passwordConfirmField.getText();
+
+            boolean validPassword = password.equals(confirmPassword);
+            boolean passwordNotEmpty = !passwordField.getText().isEmpty() &&
+                    !passwordConfirmField.getText().isEmpty();
+            boolean pathNotEmpty = !nameFileField.getText().isEmpty() &&
+                    !pathFileField.getText().isEmpty();
+
+
+            if (!validPassword && passwordNotEmpty) {
+                passwordConfirmField.setStyle("-fx-background-color: #FF8080;-fx-background-radius: 3px;");
+                passwordField.setStyle("-fx-background-color: #FF8080;-fx-background-radius: 3px;");
+            } else {
+                passwordField.setStyle("");
+                passwordConfirmField.setStyle("");
+            }
+
+            button.setDisable(!pathNotEmpty || !validPassword || !passwordNotEmpty);
         };
         passwordField.textProperty().addListener(listener);
-        visiblePasswordField.textProperty().addListener(listener);
         passwordConfirmField.textProperty().addListener(listener);
         nameFileField.textProperty().addListener(listener);
         pathFileField.textProperty().addListener(listener);
@@ -54,11 +74,11 @@ public class EventHandlerDBWindow implements EventHandler {
      *
      * @param owner
      */
-    void cancelButtonHandler(Stage owner) {
+    void cancelButton(Stage owner) {
         owner.close();
     }
 
-    void showHideButtonHandler(Button showHideButton, PasswordField masterPassField, TextField visiblePasswordField, PasswordField passwordConfirmField) {
+    void showHideButton(Button showHideButton, PasswordField masterPassField, TextField visiblePasswordField, PasswordField passwordConfirmField) {
         if (showHideButton.getText().equals("Показать")) {
             // Показываем пароль
             visiblePasswordField.setText(masterPassField.getText());

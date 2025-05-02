@@ -1,8 +1,6 @@
 package com.ural.gui.windows.db;
 
 import com.ural.gui.windows.Window;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -32,6 +30,7 @@ public class DatabaseWindow implements Window {
 
         // Кнопки внизу окна
         Button okButton = new Button("Создать");
+        okButton.setDisable(true);
         Button cancelButton = new Button("Отмена");
         HBox buttons = new HBox(10, okButton, cancelButton);
         buttons.setAlignment(Pos.CENTER_RIGHT);
@@ -50,10 +49,9 @@ public class DatabaseWindow implements Window {
         tabPane.getTabs().addAll(basicTab, securityTab, advancedTab);
 
         // Обработчики кнопок
-//        okButton.setDisable(true);
-        okButton.setOnAction(e -> handler.okButtonHandler(createDbStage, okButton));
+        okButton.setOnAction(e -> handler.okButton(createDbStage, okButton));
 
-        cancelButton.setOnAction(e -> handler.cancelButtonHandler(createDbStage));
+        cancelButton.setOnAction(e -> handler.cancelButton(createDbStage));
 
         // Основной контейнер
         VBox root = new VBox();
@@ -72,7 +70,7 @@ public class DatabaseWindow implements Window {
         createDbStage.show();
     }
 
-    private static Tab createTabAdvanced() {
+    private Tab createTabAdvanced() {
         Tab advancedTab = new Tab("Дополнительно");
 
         // Главный контейнер вкладки "Дополнительно"
@@ -101,7 +99,7 @@ public class DatabaseWindow implements Window {
         return advancedTab;
     }
 
-    private static Tab createTabBasicParameter(Stage owner, Button okButton) {
+    private Tab createTabBasicParameter(Stage owner, Button okButton) {
         // Вкладка 1: Основные параметры
         Tab basicTab = new Tab("Основные");
 
@@ -129,7 +127,7 @@ public class DatabaseWindow implements Window {
         // Кнопка для показа/скрытия пароля
         Button showHideButton = new Button("Показать");
         showHideButton.setPrefSize(70, passwordField.getPrefHeight());
-        showHideButton.setOnAction(e -> handler.showHideButtonHandler(showHideButton, passwordField, visiblePasswordField, passwordConfirmField));
+        showHideButton.setOnAction(e -> handler.showHideButton(showHideButton, passwordField, visiblePasswordField, passwordConfirmField));
 
         // Горизонтальный контейнер для подтверждения пароля
         HBox confirmPasswordContainer = new HBox();
@@ -169,25 +167,10 @@ public class DatabaseWindow implements Window {
 
         Button browseButton = new Button("Обзор...");
         browseButton.setPrefSize(70, pathFileField.getPrefHeight());
-        browseButton.setOnAction(e -> handler.browseButtonHandler(owner, pathFileField));
+        browseButton.setOnAction(e -> handler.browseButton(owner, pathFileField));
 
         // проверка на заполнение полей
-//        EventHandlerDBWindow.checkPasswordField(
-//                passwordField, visiblePasswordField, passwordConfirmField, nameFileField, pathFileField
-//        );
-        BooleanBinding allFieldsFilled = Bindings.createBooleanBinding(() ->
-                        !passwordField.getText().isEmpty() &&
-                                !passwordConfirmField.getText().isEmpty() &&
-                                !nameFileField.getText().isEmpty() &&
-                                !pathFileField.getText().isEmpty() &&
-                                passwordField.getText().equals(passwordConfirmField.getText()),
-                passwordField.textProperty(),
-                passwordConfirmField.textProperty(),
-                nameFileField.textProperty(),
-                pathFileField.textProperty()
-        );
-
-        okButton.disableProperty().bind(allFieldsFilled.not());
+        handler.checkPasswordField(passwordField, visiblePasswordField, passwordConfirmField, nameFileField, pathFileField, okButton);
 
         // Горизонтальный контейнер для выбора директории
         HBox browseContainer = new HBox();
@@ -215,7 +198,7 @@ public class DatabaseWindow implements Window {
         return basicTab;
     }
 
-    private static Tab createTabSecurity() {
+    private Tab createTabSecurity() {
         Tab securityTab = new Tab("Безопасность");
 
         // Описание вкладки

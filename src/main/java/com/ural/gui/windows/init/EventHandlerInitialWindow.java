@@ -15,7 +15,7 @@ import java.io.File;
 /**
  * Класс для обработки событий при нажатии на кнопки в окне инициализации
  */
-public class EventHandlerInitWindow implements EventHandler {
+public class EventHandlerInitialWindow implements EventHandler {
     private static final DatabaseWindow createDBWindow = new DatabaseWindow();
     private static final MainWindow mainWindow = new MainWindow();
 
@@ -23,7 +23,7 @@ public class EventHandlerInitWindow implements EventHandler {
      *
      * @param owner
      */
-    void createDatabaseButtonHandler(Stage owner) {
+    void createDatabaseButton(Stage owner) {
         createDBWindow.createWindow(owner);
     }
 
@@ -33,7 +33,7 @@ public class EventHandlerInitWindow implements EventHandler {
      * @param owner
      * @param keyFileField
      */
-    void browseButtonHandler(Stage owner, TextField keyFileField) {
+    void browseButton(Stage owner, TextField keyFileField) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Выберите ключевой файл");
 
@@ -55,7 +55,7 @@ public class EventHandlerInitWindow implements EventHandler {
      * @param owner
      * @param masterPassField
      */
-    void okButtonHandler(Stage owner, PasswordField masterPassField, TextField passwordFieldText) {
+    void okButton(Stage owner, PasswordField masterPassField, TextField passwordFieldText) {
         // Проверка пароля и переход к главному окну
         // переделать проверку полей, где вводится пароль
         if (!masterPassField.getText().isEmpty() || !passwordFieldText.getText().isEmpty()) {
@@ -79,7 +79,7 @@ public class EventHandlerInitWindow implements EventHandler {
      * @param masterPassField
      * @param visiblePasswordField
      */
-    void showHideButtonHandler(Button showHideButton, PasswordField masterPassField, TextField visiblePasswordField) {
+    void showHideButton(Button showHideButton, PasswordField masterPassField, TextField visiblePasswordField) {
         if (showHideButton.getText().equals("Показать")) {
             // Показываем пароль
             visiblePasswordField.setText(masterPassField.getText());
@@ -104,7 +104,7 @@ public class EventHandlerInitWindow implements EventHandler {
      *
      * @param owner
      */
-    void cancelButtonHandler(Stage owner) {
+    void cancelButton(Stage owner) {
         owner.close();
     }
 }

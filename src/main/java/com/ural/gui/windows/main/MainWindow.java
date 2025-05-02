@@ -17,7 +17,7 @@ public class MainWindow implements Window {
 
         // Создание строки меню для взаимодействия с окном
         MenuBar menuBar = new MenuBar();
-        createElementsMenuBar(menuBar);
+        createElementsMenuBar(menuBar, mainWindow);
 
 
         VBox topContainer = new VBox(menuBar);
@@ -121,12 +121,12 @@ public class MainWindow implements Window {
 
         Scene scene = new Scene(root, 1200, 700);
         mainWindow.setScene(scene);
-        mainWindow.setTitle("MainWindow");
+        mainWindow.setTitle("Love of Necromancer");
         mainWindow.setResizable(false);
         mainWindow.show();
     }
 
-    private static void createElementsMenuBar(MenuBar menuBar) {
+    private static void createElementsMenuBar(MenuBar menuBar, Stage owner) {
         // Элементы строки меню
         Menu file = new Menu("Файл");
         Menu group = new Menu("Группа");
@@ -140,13 +140,15 @@ public class MainWindow implements Window {
         MenuItem item2 = new MenuItem("item");
         MenuItem item3 = new MenuItem("item");
         MenuItem item4 = new MenuItem("item");
-        MenuItem item5 = new MenuItem("item");
+        MenuItem exitItemMenu = new MenuItem("Выход");
         MenuItem item6 = new MenuItem("item");
         MenuItem item7 = new MenuItem("item");
-        MenuItem item8 = new MenuItem("item");
-        MenuItem item9 = new MenuItem("item");
-        MenuItem item10 = new MenuItem("item");
-        MenuItem item11 = new MenuItem("item");
+        MenuItem addRecord = new MenuItem("Добавление записи");
+        MenuItem generator = new MenuItem("Генератор");
+        generator.setOnAction(event -> handler.openGeneratorPasswordWindow(owner));
+        exitItemMenu.setOnAction(event -> handler.exitWindow(owner));
+        addRecord.setOnAction(event -> handler.openRecordWindow(owner));
+
 
         // Добавление элементов в каждое меню
         file.getItems().addAll(
@@ -155,7 +157,7 @@ public class MainWindow implements Window {
                 item3,
                 item4,
                 new SeparatorMenuItem(),
-                item5
+                exitItemMenu
         );
 
         group.getItems().addAll(
@@ -163,16 +165,10 @@ public class MainWindow implements Window {
                 item7
         );
         record.getItems().addAll(
-                item8
-        );
-        search.getItems().addAll(
-                item9
-        );
-        view.getItems().addAll(
-                item10
+                addRecord
         );
         service.getItems().addAll(
-                item11
+                generator
         );
         menuBar.getMenus().addAll(
                 file,
