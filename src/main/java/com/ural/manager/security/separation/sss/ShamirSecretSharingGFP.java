@@ -1,4 +1,4 @@
-package com.ural.manager.security.key.separation.sss;
+package com.ural.manager.security.separation.sss;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;

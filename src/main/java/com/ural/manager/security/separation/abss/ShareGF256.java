@@ -1,4 +1,4 @@
-package com.ural.manager.security.key.separation.abss;
+package com.ural.manager.security.separation.abss;
 
 public class ShareGF256 {
     private final byte d;

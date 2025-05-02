@@ -1,4 +1,4 @@
-package com.ural.manager.generator.passsword.entropy;
+package com.ural.manager.generator.entropy;
 
 public enum PasswordCategory {
     POOR("«плохой пароль»"),

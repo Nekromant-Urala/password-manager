@@ -1,4 +1,4 @@
-package com.ural.manager.security.key.separation.abss;
+package com.ural.manager.security.separation.abss;
 
 
 import java.math.BigInteger;

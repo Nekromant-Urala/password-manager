@@ -1,11 +1,11 @@
-package com.ural.manager.security.key.separation.sss;
+package com.ural.manager.security.separation.sss;
 
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ural.manager.security.key.separation.GF256.GF256;
+import com.ural.manager.security.separation.GF256.GF256;
 
 public class ShamirSecretSharingGF256 {
 

@@ -1,4 +1,4 @@
-package com.ural.manager.security.key.separation.GF256;
+package com.ural.manager.security.separation.GF256;
 
 import static java.lang.Byte.toUnsignedInt;
 

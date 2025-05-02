@@ -1,7 +1,7 @@
-package com.ural.manager.generator.passsword.entropy;
+package com.ural.manager.generator.entropy;
 
 import static com.ural.manager.generator.passsword.Symbols.*;
-import static com.ural.manager.generator.passsword.entropy.PasswordCategory.*;
+import static com.ural.manager.generator.entropy.PasswordCategory.*;
 
 public class PasswordEntropy {
 

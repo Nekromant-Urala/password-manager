@@ -1,7 +1,7 @@
-package com.ural.manager.security.key.separation.abss;
+package com.ural.manager.security.separation.abss;
 
 
-import com.ural.manager.security.key.separation.GF256.GF256;
+import com.ural.manager.security.separation.GF256.GF256;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
