@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ural.manager.dto.data.Database;
 import com.ural.manager.dto.data.MetaData;
-import com.ural.manager.security.key.encryption.aes.Specification;
+import com.ural.manager.security.encryption.spec.AesGcmSpec;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,21 +40,21 @@ public class JsonDataStorage {
         }
     }
 
-    public void createBootConfig(String salt, String iv) {
-        Database db = new Database();
-        db.setVersion(1);
-
-        MetaData meta = new MetaData();
-        meta.setEncryption(Specification.AES_MODE.getSpec());
-        meta.setKeyDerivation(Specification.PBKDF2WithHmacSHA256.getSpec());
-        meta.setIterations(Specification.ITERATION_COUNT.getNumber());
-        meta.setSalt(salt);
-        meta.setIv(iv);
-
-        db.setMetaData(meta);
-        db.setEntries(new ArrayList<>());
-        saveToJson(db);
-    }
+//    public void createBootConfig(String salt, String iv) {
+//        Database db = new Database();
+//        db.setVersion(1);
+//
+//        MetaData meta = new MetaData();
+//        meta.setEncryption(AesGcmSpec.AES_MODE.getSpec());
+//        meta.setKeyDerivation(AesGcmSpec.PBKDF2WithHmacSHA256.getSpec());
+//        meta.setIterations(AesGcmSpec.ITERATION_COUNT.getNumber());
+//        meta.setSalt(salt);
+//        meta.setIv(iv);
+//
+//        db.setMetaData(meta);
+//        db.setEntries(new ArrayList<>());
+//        saveToJson(db);
+//    }
 
     private void saveToJson(Database db) {
         ObjectMapper objectMapper = new ObjectMapper();

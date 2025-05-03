@@ -1,10 +1,22 @@
 package com.ural.manager.security.encryption.key;
 
-import javax.crypto.SecretKey;
 
-public class PBKDF2KeyGenerator implements SecretKeyGenerator{
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import java.security.spec.KeySpec;
+
+import static com.ural.manager.security.encryption.spec.CipherAlgorithm.PBKDF2_MODE;
+
+public class PBKDF2KeyGenerator implements SecretKeyGenerator {
+    private static final int keyLength = 256;
+
     @Override
-    public SecretKey generateSecretKey(byte[] keyWord, byte[] salt) {
-        return null;
+    public SecretKey generateSecretKey(char[] keyWord, byte[] salt, int iterationCount, String algorithmName) throws Exception {
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(PBKDF2_MODE.getMode());
+        KeySpec spec = new PBEKeySpec(keyWord, salt, iterationCount, keyLength);
+        return new SecretKeySpec(keyFactory.generateSecret(spec).getEncoded(), algorithmName);
     }
 }

@@ -1,7 +1,6 @@
 package com.ural.manager.security.encryption;
 
-import java.security.SecureRandom;
-
+@FunctionalInterface
 public interface RandomGenerator {
     /**
      * @param arrayLength необходимая длинна массива
