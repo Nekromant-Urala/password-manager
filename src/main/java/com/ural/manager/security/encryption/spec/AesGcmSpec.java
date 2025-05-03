@@ -1,6 +1,6 @@
 package com.ural.manager.security.encryption.spec;
 
-public enum AesGcmSpec {
+public enum AesGcmSpec implements AlgorithmSpec{
     AES(256, 128, 12, 16);
 
     private final int keyLengthBit;
@@ -20,7 +20,7 @@ public enum AesGcmSpec {
         return keyLengthBit;
     }
 
-    public int getIvLengthByte() {
+    public int getNonceLengthByte() {
         return ivLengthByte;
     }
 

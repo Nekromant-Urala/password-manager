@@ -1,13 +1,13 @@
 package com.ural.manager.security.encryption.spec;
 
-public enum CipherAlgorithm {
-    AES_MODE("AES", "AES/GCM/NoPadding"),
-    CHACHA20_MODE("ChaCha20", "ChaCha20-Poly1305");
+public enum KeyGenerator {
+    ARGON2("Argon2", "Argon2i"),
+    PBKDF2("PBKDF2", "PBKDF2WithHmacSHA256");
 
     private final String name;
     private final String mode;
 
-    CipherAlgorithm(String name, String mode) {
+    KeyGenerator(String name, String mode){
         this.name = name;
         this.mode = mode;
     }
