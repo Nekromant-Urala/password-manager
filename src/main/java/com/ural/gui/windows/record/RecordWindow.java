@@ -27,17 +27,32 @@ public class RecordWindow implements Window {
         recordStage.initModality(Modality.WINDOW_MODAL);
         recordStage.initOwner(owner);
 
+        // поле для ввода названия пароля
+        HBox recordContainer = new HBox();
+        Label tittleRecord = new Label("Название");
+        tittleRecord.setPrefWidth(LABEL_WIDTH);
+        tittleRecord.setAlignment(Pos.CENTER_RIGHT);
+        TextField recordField = new TextField();
+        recordField.setPromptText("Введите название для записи");
+        recordField.setPrefWidth(TEXT_FIELD_WIDTH);
+
+        recordContainer.setSpacing(10);
+        recordContainer.getChildren().addAll(
+                tittleRecord,
+                recordField
+        );
+
         // поле для ввода логина-пароля
         HBox loginContainer = new HBox();
         Label tittleLogin = new Label("Логин:");
         tittleLogin.setPrefWidth(LABEL_WIDTH);
         tittleLogin.setAlignment(Pos.CENTER_RIGHT);
         TextField loginField = new TextField();
-        loginField.setPromptText("Введите логин/именование для пароля");
+        loginField.setPromptText("Введите логин");
         loginField.setPrefWidth(TEXT_FIELD_WIDTH);
 
-
         loginContainer.setSpacing(10);
+        loginContainer.setPadding(new Insets(10, 0, 0, 0));
         loginContainer.getChildren().addAll(
                 tittleLogin,
                 loginField
@@ -84,9 +99,6 @@ public class RecordWindow implements Window {
         visiblePasswordField.setManaged(false);
         visiblePasswordField.setPrefWidth(TEXT_FIELD_PASSWORD_WIDTH);
 
-
-
-
         // поле для подтверждения пароля
         HBox confirmContainer = new HBox();
         Label tittleConfirmPassword = new Label("Подтверждение:");
@@ -126,8 +138,21 @@ public class RecordWindow implements Window {
         // проверка совпадения паролей
         // handler.checkPasswordField(passwordField, visiblePasswordField, passwordConfirmField, nameFileField, pathFileField, okButton);
 
-        // индикатор качества (сложности) пароля
-        // (не добавил)
+        // поле для ввода ссылки (сервиса) для которого создана запись
+        HBox urlContainer = new HBox();
+        Label tittleURL = new Label("Сервис:");
+        tittleURL.setPrefWidth(LABEL_WIDTH);
+        tittleURL.setAlignment(Pos.CENTER_RIGHT);
+        TextField urlField = new TextField();
+        urlField.setPrefWidth(TEXT_FIELD_WIDTH);
+        urlField.setPromptText("Введите название сервиса/ссылку на сервис");
+
+        urlContainer.setSpacing(10);
+        urlContainer.setPadding(new Insets(10, 0, 0, 0));
+        urlContainer.getChildren().addAll(
+                tittleURL,
+                urlField
+        );
 
         // поле для заметок
         HBox descriptionContainer = new HBox();
@@ -167,16 +192,18 @@ public class RecordWindow implements Window {
 
         root.setPadding(new Insets(10, 15, 10, 15));
         root.getChildren().addAll(
+                recordContainer,
                 loginContainer,
                 groupContainer,
                 passwordContainer,
                 confirmContainer,
+                urlContainer,
                 descriptionContainer,
                 separator,
                 buttonsContainer
         );
 
-        Scene scene = new Scene(root, 500, 300);
+        Scene scene = new Scene(root, 500, 350);
         recordStage.setResizable(false);
         recordStage.setScene(scene);
         recordStage.show();
