@@ -145,10 +145,11 @@ public class RecordWindow implements Window {
         tittleURL.setAlignment(Pos.CENTER_RIGHT);
         TextField urlField = new TextField();
         urlField.setPrefWidth(TEXT_FIELD_WIDTH);
-        urlField.setPromptText("Введите название сервиса/ссылку на сервис");
+        urlField.setPromptText("Введите название/ссылку сервиса");
 
         urlContainer.setSpacing(10);
         urlContainer.setPadding(new Insets(10, 0, 0, 0));
+        HBox.setHgrow(urlField, Priority.ALWAYS);
         urlContainer.getChildren().addAll(
                 tittleURL,
                 urlField
