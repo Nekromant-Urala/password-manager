@@ -58,17 +58,17 @@ public class EventHandlerInitialWindow implements EventHandler {
     void okButton(Stage owner, PasswordField masterPassField, TextField passwordFieldText) {
         // Проверка пароля и переход к главному окну
         // переделать проверку полей, где вводится пароль
-        if (!masterPassField.getText().isEmpty() || !passwordFieldText.getText().isEmpty()) {
-            System.out.println("Пароль принят!");
-            // необходимо добавить метод проверки пароля перед открытием основного окна
+//        if (!masterPassField.getText().isEmpty() || !passwordFieldText.getText().isEmpty()) {
+//            System.out.println("Пароль принят!");
+//            // необходимо добавить метод проверки пароля перед открытием основного окна
             mainWindow.createWindow(owner);
             owner.close();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Ошибка");
-            alert.setHeaderText("Не введён мастер-пароль");
-            alert.showAndWait();
-        }
+//        } else {
+//            Alert alert = new Alert(Alert.AlertType.WARNING);
+//            alert.setTitle("Ошибка");
+//            alert.setHeaderText("Не введён мастер-пароль");
+//            alert.showAndWait();
+//        }
     }
 
     /**

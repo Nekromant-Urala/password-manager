@@ -2,9 +2,7 @@ package com.ural.gui.windows.db;
 
 import com.ural.gui.windows.EventHandler;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -100,4 +98,38 @@ public class EventHandlerDBWindow implements EventHandler {
         }
     }
 
+    Spinner<Integer> getIntegerSpinner() {
+        Spinner<Integer> spinner = new Spinner<>(1, Integer.MAX_VALUE, 600_000); // min, max, initial
+        spinner.setPrefWidth(150);
+
+        // Установка фабрики значений с правильной логикой инкремента/декремента
+        SpinnerValueFactory.IntegerSpinnerValueFactory factory =
+                (SpinnerValueFactory.IntegerSpinnerValueFactory) spinner.getValueFactory();
+
+        // Обработчик для текстового поля (если пользователь вводит значение вручную)
+        spinner.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+            try {
+                // Парсим введенное значение
+                int value = Integer.parseInt(newValue);
+                // Проверяем границы
+                if (value < factory.getMin()) {
+                    value = factory.getMin();
+                } else if (value > factory.getMax()) {
+                    value = factory.getMax();
+                }
+                factory.setValue(value);
+            } catch (NumberFormatException e) {
+                // Если введено не число, восстанавливаем предыдущее значение
+                if (!newValue.matches("\\d*")) {
+                    spinner.getEditor().setText(oldValue);
+                }
+            }
+        });
+
+        // Настройка инкремента/декремента на основе текущего значения
+        factory.setAmountToStepBy(1_000); // Шаг изменения
+
+        spinner.setEditable(true);
+        return spinner;
+    }
 }

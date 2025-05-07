@@ -237,34 +237,35 @@ public class DatabaseWindow implements Window {
         keyTransformationLabel.setPadding(new Insets(5, 0, 0, 15));
 
         Label keyTransformationText = new Label("Функция формирования ключа: ");
-        ObservableList<String> keyTransformationAlgorithms = FXCollections.observableArrayList("AES-PBKDF2", "Argon2");
+        ObservableList<String> keyTransformationAlgorithms = FXCollections.observableArrayList("PBKDF2", "Argon2");
         ComboBox<String> comboBoxKeyTransformationAlgorithms = new ComboBox<>(keyTransformationAlgorithms);
-        comboBoxKeyTransformationAlgorithms.setValue("AES-PBKDF2");
+        comboBoxKeyTransformationAlgorithms.setValue("PBKDF2");
         comboBoxKeyTransformationAlgorithms.setPrefWidth(150);
 
         Label countIteration = new Label("Количество итераций: ");
-        Spinner<Integer> spinner = new Spinner<>();
-        SpinnerValueFactory<Integer> factory = new SpinnerValueFactory<>() {
-            @Override
-            public void decrement(int step) {
-                setValue(getValue() - 1_000);
-            }
-
-            @Override
-            public void increment(int step) {
-                setValue(getValue() + 1_000);
-            }
-        };
-        factory.setValue(600_000);
-        spinner.setValueFactory(factory);
-        spinner.setEditable(true);
-
-        spinner.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                spinner.getEditor().setText(oldValue);
-            }
-        });
-        spinner.setPrefWidth(150);
+        Spinner<Integer> spinner = handler.getIntegerSpinner();
+//        Spinner<Integer> spinner = new Spinner<>();
+//        SpinnerValueFactory<Integer> factory = new SpinnerValueFactory<>() {
+//            @Override
+//            public void decrement(int step) {
+//                setValue(getValue() - 1_000);
+//            }
+//
+//            @Override
+//            public void increment(int step) {
+//                setValue(getValue() + 1_000);
+//            }
+//        };
+//        factory.setValue(600_000);
+//        spinner.setValueFactory(factory);
+//        spinner.setEditable(true);
+//
+//        spinner.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+//            if (!newValue.matches("\\d*")) {
+//                spinner.getEditor().setText(oldValue);
+//            }
+//        });
+//        spinner.setPrefWidth(150);
 
         Region spacer2 = new Region();
         HBox.setHgrow(spacer2, Priority.ALWAYS);
