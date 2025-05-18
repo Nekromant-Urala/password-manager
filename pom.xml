@@ -31,7 +31,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.ural.com.ural.MainApp</mainClass>
+                            <mainClass>com.ural.com.ural.app.MainApp</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -1,31 +1,37 @@
 package com.ural.gui.windows.record;
 
-import com.ural.gui.windows.Window;
+import com.ural.gui.core.Window;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class RecordWindow implements Window {
-    private static final EventHandlerRecordWindow handler = new EventHandlerRecordWindow();
+    private final RecordHandler handler;
     private static final int LABEL_WIDTH = 100;
     private static final int TEXT_FIELD_PASSWORD_WIDTH = 280;
     private static final int TEXT_FIELD_WIDTH = 250;
     private static final int BUTTON_WIDTH = 70;
 
+    public RecordWindow() {
+        this.handler = new RecordHandler();
+    }
+
     @Override
-    public void createWindow(Stage owner) {
+    public void createWindow(Stage stage) {
         Stage recordStage = new Stage();
         recordStage.setTitle("Добавление записи/пароля");
 
         // блокировка окна, на котором было вызвано данное окно
         recordStage.initModality(Modality.WINDOW_MODAL);
-        recordStage.initOwner(owner);
+        recordStage.initOwner(stage);
 
         // поле для ввода названия пароля
         HBox recordContainer = new HBox();
@@ -74,7 +80,7 @@ public class RecordWindow implements Window {
         comboBoxGroup.setPrefWidth(100);
 
         // Обработчик изменения выбора в комбобоксе
-        handler.checkGroup(comboBoxGroup, personalGroupField);
+//        handler.checkGroup(comboBoxGroup, personalGroupField);
 
         groupContainer.setSpacing(10);
         groupContainer.setPadding(new Insets(10, 0, 0, 0));
@@ -111,7 +117,7 @@ public class RecordWindow implements Window {
         // кнопка скрыть/показать пароль
         Button showHideButton = new Button("Показать");
         showHideButton.setPrefSize(BUTTON_WIDTH, passwordField.getPrefHeight());
-        showHideButton.setOnAction(e -> handler.showHideButton(showHideButton, passwordField, visiblePasswordField, passwordConfirmField));
+//        showHideButton.setOnAction(e -> handler.showHideButton(showHideButton, passwordField, visiblePasswordField, passwordConfirmField));
 
         passwordContainer.setSpacing(10);
         passwordContainer.setPadding(new Insets(10, 0, 0, 0));
@@ -124,7 +130,7 @@ public class RecordWindow implements Window {
 
         // кнопка для генерации пароля (вызывается окно генератора)
         Button generationButton = new Button("Создать");
-        generationButton.setOnAction(event -> handler.generationButton(recordStage));
+//        generationButton.setOnAction(event -> handler.generationButton(recordStage));
         generationButton.setPrefSize(BUTTON_WIDTH, showHideButton.getPrefHeight());
 
         confirmContainer.setPadding(new Insets(10, 0, 0, 0));
@@ -185,8 +191,8 @@ public class RecordWindow implements Window {
         HBox buttonsContainer = new HBox(10, addRecordButton, exitButton);
         buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
         buttonsContainer.setPadding(new Insets(10, 0, 0, 0));
-        addRecordButton.setOnAction(event -> handler.addRecordButton(recordStage));
-        exitButton.setOnAction(event -> handler.exitWindow(recordStage));
+//        addRecordButton.setOnAction(event -> handler.addRecordButton(recordStage));
+//        exitButton.setOnAction(event -> handler.exitWindow(recordStage));
 
         // Главный контейнер окна
         VBox root = new VBox();
@@ -209,4 +215,6 @@ public class RecordWindow implements Window {
         recordStage.setScene(scene);
         recordStage.show();
     }
+
+
 }

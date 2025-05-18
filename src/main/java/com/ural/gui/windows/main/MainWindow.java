@@ -1,6 +1,7 @@
 package com.ural.gui.windows.main;
 
-import com.ural.gui.windows.Window;
+import com.ural.gui.core.Window;
+import com.ural.manager.model.Record;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -13,15 +14,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
 public class MainWindow implements Window {
-    private static final EventHandlerMainWindow handler = new EventHandlerMainWindow();
-    private static final int COLUMN_WIDTH = 199;
+    private final MainHandler handler;
+    private static final int COLUMN_WIDTH = 200;
     private static final String STYLE_ENTERED = "-fx-background-color: #e1f5fe;-fx-padding: 5px;-fx-border-radius: 3px;"; // светло-голубой
     private static final String STYLE_EXITED = "-fx-background-color: transparent;-fx-padding: 5px;-fx-border-radius: 3px;"; //
     private static final String STYLE_PRESSED = "-fx-background-color: #b3e5fc;-fx-padding: 5px;-fx-border-radius: 3px;";
+    private static final String STYLE_BORDER_CONTAINER = "-fx-border-color: #a0a0a0;-fx-border-width: 1px;-fx-padding: 2px;-fx-border-insets: 2px;-fx-background-color: #FFFFFF;";
 
-    public void createWindow(Stage owner) {
+    public MainWindow() {
+        this.handler = new MainHandler();
+    }
+
+    @Override
+    public void createWindow(Stage stage) {
         Stage mainWindow = new Stage();
 
         // Создание строки меню для взаимодействия с окном
@@ -36,64 +42,49 @@ public class MainWindow implements Window {
         VBox groups = createListGroups();
 
         // Создаем список объектов
-        ObservableList<PasswordRecord> records = FXCollections.observableArrayList(
+        ObservableList<com.ural.manager.model.Record> records = FXCollections.observableArrayList(
         );
 
 
         // Контейнер для демонстрации и взаимодействия с записями (паролями)
-        TableView<PasswordRecord> table = new TableView<>(records);
+        TableView<com.ural.manager.model.Record> table = new TableView<>(records);
         table.setPrefSize(1000, 500);
-        table.setStyle(
-                "-fx-border-color: #a0a0a0;" +
-                        "-fx-border-width: 1px;" +
-                        "-fx-padding: 2px;" +
-                        "-fx-border-insets: 2px;" +
-                        "-fx-background-color: #FFFFFF;"
-        );
+        table.setStyle(STYLE_BORDER_CONTAINER);
         table.setPlaceholder(new Label("Нет записей для отображения"));
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
 
         // Столбец для вывода названия записи
-        TableColumn<PasswordRecord, String> nameColumn = createColumn("Название", "name");
+        TableColumn<com.ural.manager.model.Record, String> nameColumn = createColumn("Название", "name");
         table.getColumns().add(nameColumn);
 
         // Столбец для вывода логина записи
-        TableColumn<PasswordRecord, String> loginColumn = createColumn("Логин", "login");
+        TableColumn<com.ural.manager.model.Record, String> loginColumn = createColumn("Логин", "login");
         table.getColumns().add(loginColumn);
 
         // Столбец для вывода пароля
-        TableColumn<PasswordRecord, String> passwordColumn = createColumn("Пароль", "password");
+        TableColumn<com.ural.manager.model.Record, String> passwordColumn = createColumn("Пароль", "password");
         table.getColumns().add(passwordColumn);
 
         // Столбец для вывода сервиса
-        TableColumn<PasswordRecord, String> serviceColumn = createColumn("Сервис", "service");
+        TableColumn<com.ural.manager.model.Record, String> serviceColumn = createColumn("Сервис", "service");
         table.getColumns().add(serviceColumn);
 
         // Столбец для вывода заметок
-        TableColumn<PasswordRecord, String> notionColumn = createColumn("Заметки", "notion");
+        TableColumn<Record, String> notionColumn = createColumn("Заметки", "notion");
         table.getColumns().add(notionColumn);
 
         // Поле для вывода подробной информации о записи
         HBox hBox = new HBox();
         hBox.setPrefSize(1200, 100);
-        hBox.setStyle(
-                "-fx-border-color: #a0a0a0;" +        // Цвет границы
-                        "-fx-border-width: 1px;" +           // Толщина
-                        "-fx-border-radius: 0px;" +          // закругление углов
-                        "-fx-border-insets: 2px;" +          // отступ границы от краём
-                        "-fx-padding: 2px;" +                // внутренний отступ
-                        "-fx-background-color: #FFFFFF;"// фон внутри
-        );
+        hBox.setStyle(STYLE_BORDER_CONTAINER);
 
         // Главный контейнер данного окна
         BorderPane root = new BorderPane();
-
 
         root.setTop(topContainer);
         root.setLeft(groups);
         root.setCenter(table);
         root.setBottom(hBox);
-
 
         Scene scene = new Scene(root, 1200, 700);
         mainWindow.setScene(scene);
@@ -105,14 +96,7 @@ public class MainWindow implements Window {
     private static VBox createListGroups() {
         VBox groupList = new VBox();
         groupList.setPrefSize(200, 600);
-        groupList.setStyle(
-                "-fx-border-color: #a0a0a0;" +       // Цвет границы
-                        "-fx-border-width: 1px;" +           // Толщина
-                        "-fx-border-radius: 0px;" +          // закругление углов
-                        "-fx-border-insets: 2px;" +          // отступ границы от краём
-                        "-fx-padding: 2px;" +                // внутренний отступ
-                        "-fx-background-color: #FFFFFF;"// фон внутри
-        );
+        groupList.setStyle(STYLE_BORDER_CONTAINER);
 
         Label allGroups = createLabelGroup("Все группы:");
 
@@ -161,7 +145,7 @@ public class MainWindow implements Window {
         return label;
     }
 
-    private static void createElementsMenuBar(MenuBar menuBar, Stage owner) {
+    private void createElementsMenuBar(MenuBar menuBar, Stage stage) {
         // Элементы строки меню
         Menu file = new Menu("Файл");
         Menu group = new Menu("Группа");
@@ -180,9 +164,10 @@ public class MainWindow implements Window {
         MenuItem addRecord = new MenuItem("Добавить записи");
         MenuItem generator = new MenuItem("Генератор");
 
-        generator.setOnAction(event -> handler.openGeneratorPasswordWindow(owner));
-        exitItemMenu.setOnAction(event -> handler.exitWindow(owner));
-        addRecord.setOnAction(event -> handler.openRecordWindow(owner));
+        createNewDatabase.setOnAction(event -> handler.openDatabaseWindow(stage));
+        generator.setOnAction(event -> handler.openGeneratorPasswordWindow(stage));
+        exitItemMenu.setOnAction(event -> handler.exitWindow(stage));
+        addRecord.setOnAction(event -> handler.openRecordWindow(stage));
 
         // Добавление элементов в каждое меню
         file.getItems().addAll(
@@ -220,8 +205,8 @@ public class MainWindow implements Window {
      * @param field      название поля класса, за которым необходимо закрепить колонку таблицы
      * @return Возвращает колонку для создания таблицы
      */
-    private TableColumn<PasswordRecord, String> createColumn(String nameColumn, String field) {
-        TableColumn<PasswordRecord, String> column = new TableColumn<>();
+    private TableColumn<Record, String> createColumn(String nameColumn, String field) {
+        TableColumn<Record, String> column = new TableColumn<>();
         column.setCellValueFactory(new PropertyValueFactory<>(field));
         Label hader = new Label(nameColumn);
         hader.setAlignment(Pos.CENTER_LEFT);
