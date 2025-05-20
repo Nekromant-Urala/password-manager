@@ -3,7 +3,10 @@ package com.ural.gui.windows.initial;
 
 import com.ural.gui.core.BaseHandlerEvent;
 import com.ural.gui.windows.main.MainWindow;
+import com.ural.manager.service.AuthService;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -12,18 +15,42 @@ import javafx.stage.Stage;
 
 public class InitialHandler extends BaseHandlerEvent {
     private static final MainWindow main = new MainWindow();
+    private final AuthService authService;
 
     public InitialHandler() {
-
+        this.authService = new AuthService();
     }
 
     @Override
     public void successfulEvent(Stage stage) {
         // метод проверки пароля и переход на мейн окно
-        // validatePassword()
-        main.createWindow(stage);
-        stage.close();
+        if (authService.verifyPassword(getPassword(stage))) {
+            main.createWindow(stage);
+            stage.close();
+        } else {
+            showInfo();
+        }
     }
+
+    private void showInfo() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Ошибка ввода");
+        alert.setHeaderText(null);
+        alert.setContentText("Введен неправильный пароль");
+        alert.setWidth(270);
+        alert.setHeight(150);
+        alert.show();
+    }
+
+    private String getPassword(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        PasswordField passwordField = (PasswordField) root.lookup("#passwordField");
+        TextField visiblePasswordField = (TextField) root.lookup("#visiblePasswordField");
+        return passwordField.getText().isEmpty()
+                ? visiblePasswordField.getText()
+                : passwordField.getText();
+    }
+
 
     public void checkPasswordField(Button okButton, PasswordField passwordField, TextField visiblePasswordField) {
         ChangeListener<String> listener = (obs, oldValue, newValue) -> {

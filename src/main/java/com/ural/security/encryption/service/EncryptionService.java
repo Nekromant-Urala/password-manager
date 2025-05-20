@@ -1,10 +1,14 @@
 package com.ural.security.encryption.service;
 
 import javax.crypto.SecretKey;
+import java.io.BufferedReader;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.List;
 
+import com.ural.manager.model.MetaData;
 import com.ural.security.encryption.RandomGenerator;
 import com.ural.security.encryption.SymmetricCipher;
 import com.ural.security.encryption.key.SecretKeyGenerator;
@@ -50,6 +54,38 @@ public class EncryptionService {
                 .array();
 
         return Base64.getEncoder().encode(encryptedTextWithMeta);
+    }
+
+    /**
+     * Метод предназначен для воссоздания хэша пароля, хранящегося в базе
+     *
+     * @param userPassword пароль введенный пользователем в окно инициализации
+     * @param salt         "соль", при которой создавался секретный ключ
+     * @param nonce        IV, который использовался при шифровании пароля
+     * @return Возвращает массив байт полученный при заданных данных
+     */
+    public byte[] encrypt(String userPassword, byte[] salt, byte[] nonce) throws Exception {
+        // создание секретного ключа
+        SecretKey key = keyGenerator.generateSecretKey(userPassword.toCharArray(), salt, iterationCount, cipher.getName());
+        // воссоздание хеша
+        return cipher.encrypt(userPassword.getBytes(StandardCharsets.UTF_8), key, nonce);
+    }
+
+    /**
+     * @param passwordWithMeta хеш пароля хранящегося в базе
+     * @return Возвращает лист массивов байт. В такой же последовательности, в которой они хранятся
+     */
+    public List<byte[]> getSaltAndNonceFromMeta(String passwordWithMeta) {
+        byte[] decode = Base64.getDecoder().decode(passwordWithMeta);
+        ByteBuffer buffer = ByteBuffer.wrap(decode);
+        byte[] salt = new byte[cipher.getSpec().getSaltLengthByte()];
+        buffer.get(salt);
+        byte[] nonce = new byte[cipher.getSpec().getNonceLengthByte()];
+        buffer.get(nonce);
+        byte[] password = new byte[buffer.remaining()];
+        buffer.get(password);
+        buffer.clear();
+        return List.of(salt, nonce, password);
     }
 
     /**

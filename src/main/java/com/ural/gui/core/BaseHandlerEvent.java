@@ -48,6 +48,7 @@ public class BaseHandlerEvent {
         visiblePasswordField.setManaged(true);
         passwordField.setVisible(false);
         passwordField.setManaged(false);
+        passwordField.clear();
         showHideButton.setText("Скрыть");
     }
 
@@ -57,6 +58,7 @@ public class BaseHandlerEvent {
         passwordField.setManaged(true);
         visiblePasswordField.setVisible(false);
         visiblePasswordField.setManaged(false);
+        visiblePasswordField.clear();
         showHideButton.setText("Показать");
     }
 

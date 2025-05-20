@@ -13,6 +13,7 @@ import com.ural.security.encryption.service.EncryptionService;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class DatabaseService {
@@ -60,7 +61,8 @@ public class DatabaseService {
         }
     }
 
-    public Database loadDatabase(Path path) {
+    public Database loadDatabase(String pathData) {
+        Path path = Paths.get(pathData);
         String jsonContent = FileUtils.readFile(path);
         return serializer.deserialize(jsonContent, new TypeReference<>() {
         });

@@ -107,6 +107,7 @@ public class InitialWindow implements Window {
         visiblePasswordField.setVisible(false);
         visiblePasswordField.setManaged(false);
         visiblePasswordField.setPrefWidth(TEXT_FIELD_WIDTH);
+        visiblePasswordField.setId("visiblePasswordField");
         return visiblePasswordField;
     }
 
@@ -114,6 +115,7 @@ public class InitialWindow implements Window {
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Введите мастер-пароль");
         passwordField.setPrefWidth(TEXT_FIELD_WIDTH);
+        passwordField.setId("passwordField");
         return passwordField;
     }
 
