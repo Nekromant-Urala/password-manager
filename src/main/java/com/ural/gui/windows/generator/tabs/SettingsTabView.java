@@ -32,23 +32,32 @@ public class SettingsTabView implements TabView {
         Label countSymbols = new Label("Количество символов в пароле:");
         countSymbols.setPrefWidth(CHECKBOX_WIDTH);
         Spinner<Integer> spinner = handler.createSpinner(5, 20, 1, 100);
+        spinner.setId("spinner");
 
         // checkBox для заглавных букв
         CheckBox upperCaseSymbols = createCheckBox("Заглавные буквы (A, B, C, ...)", CHECKBOX_WIDTH);
+        upperCaseSymbols.setId("upperCaseSymbols");
         // checkBox для строчных букв
         CheckBox lowerCaseSymbols = createCheckBox("Строчные буквы (a, b, c, ...)", CHECKBOX_WIDTH);
+        lowerCaseSymbols.setId("lowerCaseSymbols");
         // checkBox цифры
         CheckBox digits = createCheckBox("Цифры (0, 1, 2, ...)", CHECKBOX_WIDTH);
+        digits.setId("digits");
         // checkBox минус
         CheckBox minus = createCheckBox("Минус ( - )", CHECKBOX_WIDTH);
+        minus.setId("minus");
         // checkBox подчеркивание
         CheckBox underscore = createCheckBox("Символ подчеркивания ( _ )", CHECKBOX_WIDTH);
+        underscore.setId("underscore");
         // checkBox пробел
         CheckBox space = createCheckBox("Пробельный символ ( )", CHECKBOX_WIDTH);
+        space.setId("space");
         // checkBox особые символы
         CheckBox specialSymbols = createCheckBox("Специальные символы (!, @, #, ...)", CHECKBOX_WIDTH_210);
+        specialSymbols.setId("specialSymbols");
         // checkBox скобки
         CheckBox staples = createCheckBox("Скобки ({, }, [, ], ...)", CHECKBOX_WIDTH);
+        staples.setId("staples");
 
 
         VBox checkBoxContainerLeft = new VBox();

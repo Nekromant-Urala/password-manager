@@ -2,6 +2,7 @@ package com.ural.gui.windows.generator.tabs;
 
 import com.ural.gui.core.TabView;
 import com.ural.gui.windows.generator.GeneratorHandler;
+import com.ural.manager.model.PasswordConfiguration;
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -13,11 +14,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class AdvancedTabView implements TabView {
-
     private final GeneratorHandler handler;
+    private final PasswordConfiguration.Builder configuration;
 
-    public AdvancedTabView(GeneratorHandler handler) {
+    public AdvancedTabView(GeneratorHandler handler, PasswordConfiguration.Builder configuration) {
         this.handler = handler;
+        this.configuration = configuration;
     }
 
     @Override

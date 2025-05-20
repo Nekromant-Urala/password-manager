@@ -20,10 +20,8 @@ public class BasicTabView implements TabView {
     private static final int BUTTON_WIDTH = 70;
 
     private final SettingsData.Builder settings;
-    private final CreationFileHandler handler;
 
-    public BasicTabView(SettingsData.Builder settings, CreationFileHandler handler) {
-        this.handler = handler;
+    public BasicTabView(SettingsData.Builder settings) {
         this.settings = settings;
     }
 
@@ -31,21 +29,23 @@ public class BasicTabView implements TabView {
     public Tab createTab(Stage stage) {
         // Основные поля вкладки
         PasswordField passwordField = createPasswordField();
+        passwordField.setId("passwordField");
         TextField visiblePasswordField = createVisiblePasswordField();
+        visiblePasswordField.setId("visiblePasswordField");
         PasswordField passwordConfirmField = createPasswordField();
+        passwordConfirmField.setId("passwordConfirmField");
         TextField nameFileField = createTextField("Название файла");
+        nameFileField.setId("nameFileField");
         TextField pathFileField = createTextField("Путь по которому будет храниться файл");
+        pathFileField.setId("pathFileField");
 
         Button showHideButton = createButton("Показать");
+        showHideButton.setId("showHideButton");
         Button browseButton = createButton("Обзор...");
+        browseButton.setId("browseButton");
 
         // установка привязок
         setupBindings(passwordField, visiblePasswordField, nameFileField, pathFileField);
-        setupHandler(
-                stage, showHideButton, browseButton,
-                visiblePasswordField, passwordField, passwordConfirmField,
-                pathFileField, nameFileField
-        );
 
         // Главный контейнер основной вкладки
         VBox content = new VBox();
@@ -143,13 +143,13 @@ public class BasicTabView implements TabView {
     private void setupBindings(PasswordField passwordField, TextField visiblePassword, TextField nameFileField, TextField pathFileField) {
         passwordField.textProperty().addListener((obs, oldValue, newValue) -> {
             if (passwordField.isVisible()) {
-                setPassword(newValue);
+                settings.masterPassword(newValue);
             }
         });
 
         visiblePassword.textProperty().addListener((obs, oldValue, newValue) -> {
             if (visiblePassword.isVisible()) {
-                setPassword(newValue);
+                settings.masterPassword(newValue);
             }
         });
 
@@ -159,25 +159,6 @@ public class BasicTabView implements TabView {
 
         pathFileField.textProperty().addListener((obs, oldValue, newValue) -> {
             settings.pathFile(newValue);
-        });
-    }
-
-    private void setPassword(String password) {
-        settings.masterPassword(password);
-    }
-
-    private void setupHandler(
-            Stage stage, Button showHideButton, Button browseButton,
-            TextField visiblePasswordField, PasswordField passwordField,
-            PasswordField passwordConfirmField, TextField pathFileField, TextField nameFileField) {
-        handler.checkPasswordField(passwordField, visiblePasswordField, passwordConfirmField, nameFileField, pathFileField);
-
-        showHideButton.setOnAction(event -> {
-            handler.hideEvent(showHideButton, passwordField, visiblePasswordField, passwordConfirmField);
-        });
-
-        browseButton.setOnAction(event -> {
-            handler.searchEvent(stage, pathFileField);
         });
     }
 }

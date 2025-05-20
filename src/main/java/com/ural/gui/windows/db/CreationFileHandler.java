@@ -5,6 +5,7 @@ import com.ural.gui.windows.initial.InitialWindow;
 import com.ural.manager.model.SettingsData;
 import com.ural.manager.service.DatabaseService;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -12,25 +13,34 @@ import javafx.stage.Stage;
 
 public class CreationFileHandler extends BaseHandlerEvent {
     private final DatabaseService databaseService;
-    private Button okButton;
+    private SettingsData settingsData;
 
     public CreationFileHandler() {
         databaseService = new DatabaseService();
     }
 
-    public void getBasicField(Button okButton) {
-        this.okButton = okButton;
-    }
-
-    public void successfulEvent(Stage stage, SettingsData.Builder settings) {
-        SettingsData set = settings.build();
-        System.out.println(set);
-        databaseService.createDatabase(set);
+    @Override
+    public void successfulEvent(Stage stage) {
+        System.out.println(settingsData);
+        databaseService.createDatabase(settingsData);
         stage.close();
         InitialWindow.createInit(new Stage());
     }
 
-    public void checkPasswordField(PasswordField passwordField, TextField visiblePasswordField, PasswordField passwordConfirmField, TextField nameFileField, TextField pathFileField) {
+    public void setSettingsData(SettingsData.Builder settings) {
+        this.settingsData = settings.build();
+    }
+
+    @Override
+    public void checkPasswordField(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        PasswordField passwordField = (PasswordField) root.lookup("#passwordField");
+        TextField visiblePasswordField = (TextField) root.lookup("#visiblePasswordField");
+        PasswordField passwordConfirmField = (PasswordField) root.lookup("#passwordConfirmField");
+        TextField nameFileField = (TextField) root.lookup("#nameFileField");
+        TextField pathFileField = (TextField) root.lookup("#pathFileField");
+        Button okButton = (Button) root.lookup("#okButton");
+
         ChangeListener<String> listener = (obs, oldValue, newValue) -> {
             String password = passwordField.getText().isEmpty()
                     ? visiblePasswordField.getText()

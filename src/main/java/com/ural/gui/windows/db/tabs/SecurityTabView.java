@@ -33,11 +33,13 @@ public class SecurityTabView implements TabView {
 
     @Override
     public Tab createTab(Stage stage) {
-
         // основные поля вкладки
         ComboBox<String> comboBoxAlgorithms = new ComboBox<>();
+        comboBoxAlgorithms.setId("comboBoxAlgorithms");
         ComboBox<String> comboBoxFunctions = new ComboBox<>();
+        comboBoxAlgorithms.setId("comboBoxFunctions");
         Spinner<Integer> spinner = handler.createSpinner(1, 600_000, 1_000, COMBO_BOX_WIDTH);
+        spinner.setId("spinner");
 
         // установка привязок
         setupBindings(comboBoxAlgorithms, comboBoxFunctions, spinner);

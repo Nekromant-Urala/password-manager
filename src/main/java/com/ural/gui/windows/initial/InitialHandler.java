@@ -51,22 +51,16 @@ public class InitialHandler extends BaseHandlerEvent {
                 : passwordField.getText();
     }
 
-
-    public void checkPasswordField(Button okButton, PasswordField passwordField, TextField visiblePasswordField) {
-        ChangeListener<String> listener = (obs, oldValue, newValue) -> {
-            String password = passwordField.getText().isEmpty()
-                    ? visiblePasswordField.getText()
-                    : passwordField.getText();
-
-            // Кнопка активна, если хотя бы одно поле не пустое
-            okButton.setDisable(password.isEmpty());
-        };
-
-        // Добавляем слушатели к обоим полям
-        passwordField.textProperty().addListener(listener);
-        visiblePasswordField.textProperty().addListener(listener);
-
-        // Инициализируем начальное состояние кнопки
-        listener.changed(null, null, null);
+    @Override
+    public void hideEvent(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        Button showHideButton = (Button) root.lookup("#showHideButton");
+        PasswordField passwordField = (PasswordField) root.lookup("#passwordField");
+        TextField visiblePasswordField = (TextField) root.lookup("#visiblePasswordField");
+        if (showHideButton.getText().equals("Показать")) {
+            showVisiblePassword(showHideButton, visiblePasswordField, passwordField);
+        } else {
+            hidePassword(showHideButton, visiblePasswordField, passwordField);
+        }
     }
 }

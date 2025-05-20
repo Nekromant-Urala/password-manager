@@ -14,11 +14,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class RecordWindow implements Window {
-    private final RecordHandler handler;
     private static final int LABEL_WIDTH = 100;
     private static final int TEXT_FIELD_PASSWORD_WIDTH = 280;
     private static final int TEXT_FIELD_WIDTH = 250;
     private static final int BUTTON_WIDTH = 70;
+    private static final int WIDTH_WINDOW = 500;
+    private static final int HEIGHT_WINDOW = 350;
+    private static final Insets TOP_MARGIN = new Insets(10, 0, 0, 0);
+    private static final Insets ROOT_MARGIN = new Insets(10, 15, 10, 15);
+    private static final int SPACING = 10;
+
+    private final RecordHandler handler;
 
     public RecordWindow() {
         this.handler = new RecordHandler();
@@ -32,97 +38,64 @@ public class RecordWindow implements Window {
         // блокировка окна, на котором было вызвано данное окно
         recordStage.initModality(Modality.WINDOW_MODAL);
         recordStage.initOwner(stage);
-
         // поле для ввода названия пароля
-        HBox recordContainer = new HBox();
-        Label tittleRecord = new Label("Название");
-        tittleRecord.setPrefWidth(LABEL_WIDTH);
-        tittleRecord.setAlignment(Pos.CENTER_RIGHT);
-        TextField recordField = new TextField();
-        recordField.setPromptText("Введите название для записи");
-        recordField.setPrefWidth(TEXT_FIELD_WIDTH);
-
-        recordContainer.setSpacing(10);
+        Label tittleLabel = createLabel("Название");
+        TextField tittleField = createTextField("Введите название для записи");
+        tittleField.setId("tittleField");
+        // контейнер названия
+        HBox recordContainer = createContainer();
         recordContainer.getChildren().addAll(
-                tittleRecord,
-                recordField
+                tittleLabel,
+                tittleField
         );
 
         // поле для ввода логина-пароля
-        HBox loginContainer = new HBox();
-        Label tittleLogin = new Label("Логин:");
-        tittleLogin.setPrefWidth(LABEL_WIDTH);
-        tittleLogin.setAlignment(Pos.CENTER_RIGHT);
-        TextField loginField = new TextField();
-        loginField.setPromptText("Введите логин");
-        loginField.setPrefWidth(TEXT_FIELD_WIDTH);
-
-        loginContainer.setSpacing(10);
-        loginContainer.setPadding(new Insets(10, 0, 0, 0));
+        Label loginLabel = createLabel("Логин:");
+        TextField loginField = createTextField("Введите логин");
+        loginField.setId("loginField");
+        // контейнер логина
+        HBox loginContainer = createContainer();
         loginContainer.getChildren().addAll(
-                tittleLogin,
+                loginLabel,
                 loginField
         );
 
         // группа пароля (ComboBox)
-        HBox groupContainer = new HBox();
-        Label tittleGroup = new Label("Группа:");
-        tittleGroup.setPrefWidth(LABEL_WIDTH);
-        tittleGroup.setAlignment(Pos.CENTER_RIGHT);
-        TextField personalGroupField = new TextField();
-        personalGroupField.setDisable(true);
-        personalGroupField.setPromptText("Введите название группы");
-        personalGroupField.setPrefWidth(TEXT_FIELD_WIDTH);
-
-        ObservableList<String> groups = FXCollections.observableArrayList("Общие", "Сеть", "Интернет", "Почта", "Счета", "OC", "Другое");
-        ComboBox<String> comboBoxGroup = new ComboBox<>(groups);
-        comboBoxGroup.setValue(groups.get(0));
-        comboBoxGroup.setPrefWidth(100);
-
-        // Обработчик изменения выбора в комбобоксе
-//        handler.checkGroup(comboBoxGroup, personalGroupField);
-
-        groupContainer.setSpacing(10);
-        groupContainer.setPadding(new Insets(10, 0, 0, 0));
+        Label groupLabel = createLabel("Группа:");
+        TextField groupField = createTextField("Введите название группы");
+        groupField.setId("groupField");
+        groupField.setDisable(true);
+        // комбобокс со списком допустимых групп
+        ComboBox<String> comboBoxGroup = createListGroups();
+        comboBoxGroup.setId("comboBoxGroup");
+        // контейнер группы
+        HBox groupContainer = createContainer();
         groupContainer.getChildren().addAll(
-                tittleGroup,
-                personalGroupField,
+                groupLabel,
+                groupField,
                 comboBoxGroup
         );
 
         // поле для ввода пароля
-        HBox passwordContainer = new HBox();
-        Label tittlePassword = new Label("Пароль:");
-        tittlePassword.setPrefWidth(LABEL_WIDTH);
-        tittlePassword.setAlignment(Pos.CENTER_RIGHT);
-        PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Введите пароль");
-        passwordField.setPrefWidth(TEXT_FIELD_PASSWORD_WIDTH);
-
-        TextField visiblePasswordField = new TextField();
-        visiblePasswordField.setPromptText("Введите пароль");
+        Label passwordLabel = createLabel("Пароль:");
+        PasswordField passwordField = createPasswordField();
+        passwordField.setId("passwordField");
+        TextField visiblePasswordField = createPasswordField();
+        visiblePasswordField.setId("passwordField");
         visiblePasswordField.setVisible(false);
         visiblePasswordField.setManaged(false);
-        visiblePasswordField.setPrefWidth(TEXT_FIELD_PASSWORD_WIDTH);
-
         // поле для подтверждения пароля
-        HBox confirmContainer = new HBox();
-        Label tittleConfirmPassword = new Label("Подтверждение:");
-        tittleConfirmPassword.setPrefWidth(LABEL_WIDTH);
-        tittleConfirmPassword.setAlignment(Pos.CENTER_RIGHT);
-        PasswordField passwordConfirmField = new PasswordField();
-        passwordConfirmField.setPromptText("Введите пароль");
-        passwordConfirmField.setPrefWidth(TEXT_FIELD_PASSWORD_WIDTH);
-
+        Label confirmPasswordLabel = createLabel("Подтверждение:");
+        PasswordField passwordConfirmField = createPasswordField();
+        passwordField.setId("passwordConfirmField");
         // кнопка скрыть/показать пароль
         Button showHideButton = new Button("Показать");
+        showHideButton.setId("showHideButton");
         showHideButton.setPrefSize(BUTTON_WIDTH, passwordField.getPrefHeight());
-//        showHideButton.setOnAction(e -> handler.showHideButton(showHideButton, passwordField, visiblePasswordField, passwordConfirmField));
-
-        passwordContainer.setSpacing(10);
-        passwordContainer.setPadding(new Insets(10, 0, 0, 0));
+        // контейнер поля ввода пароля
+        HBox passwordContainer = createContainer();
         passwordContainer.getChildren().addAll(
-                tittlePassword,
+                passwordLabel,
                 passwordField,
                 visiblePasswordField,
                 showHideButton
@@ -130,74 +103,56 @@ public class RecordWindow implements Window {
 
         // кнопка для генерации пароля (вызывается окно генератора)
         Button generationButton = new Button("Создать");
-//        generationButton.setOnAction(event -> handler.generationButton(recordStage));
+        generationButton.setId("generationButton");
         generationButton.setPrefSize(BUTTON_WIDTH, showHideButton.getPrefHeight());
-
-        confirmContainer.setPadding(new Insets(10, 0, 0, 0));
-        confirmContainer.setSpacing(10);
+        // контейнер подтверждения пароля
+        HBox confirmContainer = createContainer();
         confirmContainer.getChildren().addAll(
-                tittleConfirmPassword,
+                confirmPasswordLabel,
                 passwordConfirmField,
                 generationButton
         );
 
-        // проверка совпадения паролей
-        // handler.checkPasswordField(passwordField, visiblePasswordField, passwordConfirmField, nameFileField, pathFileField, okButton);
-
         // поле для ввода ссылки (сервиса) для которого создана запись
-        HBox urlContainer = new HBox();
-        Label tittleURL = new Label("Сервис:");
-        tittleURL.setPrefWidth(LABEL_WIDTH);
-        tittleURL.setAlignment(Pos.CENTER_RIGHT);
-        TextField urlField = new TextField();
-        urlField.setPrefWidth(TEXT_FIELD_WIDTH);
-        urlField.setPromptText("Введите название/ссылку сервиса");
-
-        urlContainer.setSpacing(10);
-        urlContainer.setPadding(new Insets(10, 0, 0, 0));
+        Label urlLabel = createLabel("Сервис:");
+        TextField urlField = createTextField("Введите название/ссылку сервиса");
+        urlField.setId("urlField");
+        // контейнер ссылки
+        HBox urlContainer = createContainer();
         HBox.setHgrow(urlField, Priority.ALWAYS);
         urlContainer.getChildren().addAll(
-                tittleURL,
+                urlLabel,
                 urlField
         );
 
         // поле для заметок
-        HBox descriptionContainer = new HBox();
-        Label description = new Label("Описание:");
-        description.setPrefWidth(LABEL_WIDTH);
-        description.setAlignment(Pos.CENTER_RIGHT);
-        TextArea descriptionArea = new TextArea();
-        descriptionArea.setPrefSize(TEXT_FIELD_PASSWORD_WIDTH, 100);
-        descriptionArea.setPromptText("Заметка, о пароле которую хотите оставить");
-
-
-        descriptionContainer.setSpacing(10);
-        descriptionContainer.setPadding(new Insets(10, 0, 0, 0));
+        Label descriptionLabel = createLabel("Описание:");
+        TextArea descriptionArea = createTextArea();
+        descriptionArea.setId("descriptionArea");
+        // контейнер описания
+        HBox descriptionContainer = createContainer();
         HBox.setHgrow(descriptionArea, Priority.ALWAYS);
         descriptionContainer.getChildren().addAll(
-                description,
+                descriptionLabel,
                 descriptionArea
         );
-
-
-        // Нижний разделитель
-        Separator separator = new Separator();
-        separator.setPadding(new Insets(10, 0, 0, 0));
 
         // Кнопки внизу окна
         Button addRecordButton = new Button("Добавить");
         addRecordButton.setDisable(true);
+        addRecordButton.setId("addRecordButton");
         Button exitButton = new Button("Закрыть");
-        HBox buttonsContainer = new HBox(10, addRecordButton, exitButton);
+        exitButton.setId("exitButton");
+        // контейнер главных кнопок окна
+        HBox buttonsContainer = new HBox(SPACING, addRecordButton, exitButton);
         buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
-        buttonsContainer.setPadding(new Insets(10, 0, 0, 0));
-//        addRecordButton.setOnAction(event -> handler.addRecordButton(recordStage));
-//        exitButton.setOnAction(event -> handler.exitWindow(recordStage));
+        buttonsContainer.setPadding(TOP_MARGIN);
+
+        setupHandler(addRecordButton, exitButton, showHideButton, generationButton, recordStage);
 
         // Главный контейнер окна
         VBox root = new VBox();
-
-        root.setPadding(new Insets(10, 15, 10, 15));
+        root.setPadding(ROOT_MARGIN);
         root.getChildren().addAll(
                 recordContainer,
                 loginContainer,
@@ -206,15 +161,75 @@ public class RecordWindow implements Window {
                 confirmContainer,
                 urlContainer,
                 descriptionContainer,
-                separator,
+                createSeparator(),
                 buttonsContainer
         );
 
-        Scene scene = new Scene(root, 500, 350);
+        Scene scene = new Scene(root, WIDTH_WINDOW, HEIGHT_WINDOW);
         recordStage.setResizable(false);
         recordStage.setScene(scene);
         recordStage.show();
     }
 
+    private HBox createContainer() {
+        HBox hBox = new HBox();
+        hBox.setSpacing(SPACING);
+        hBox.setPadding(TOP_MARGIN);
+        return hBox;
+    }
 
+    private Separator createSeparator() {
+        Separator separator = new Separator();
+        separator.setPadding(TOP_MARGIN);
+        return separator;
+    }
+
+    private TextArea createTextArea() {
+        TextArea textArea = new TextArea();
+        textArea.setPrefSize(TEXT_FIELD_PASSWORD_WIDTH, 100);
+        textArea.setPromptText("Заметка, о пароле которую хотите оставить");
+        return textArea;
+    }
+
+    private Label createLabel(String text) {
+        Label label = new Label(text);
+        label.setPrefWidth(LABEL_WIDTH);
+        label.setAlignment(Pos.CENTER_RIGHT);
+        return label;
+    }
+
+    private TextField createTextField(String promptText) {
+        TextField textField = new TextField();
+        textField.setPromptText(promptText);
+        textField.setPrefWidth(TEXT_FIELD_WIDTH);
+        return textField;
+    }
+
+    private PasswordField createPasswordField() {
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Введите пароль");
+        passwordField.setPrefWidth(TEXT_FIELD_PASSWORD_WIDTH);
+        return passwordField;
+    }
+
+    private ComboBox<String> createListGroups() {
+        ObservableList<String> groups = FXCollections.observableArrayList("Общие", "Сеть", "Интернет", "Почта", "Счета", "OC", "Другое");
+        ComboBox<String> comboBox = new ComboBox<>(groups);
+        comboBox.setValue(groups.get(0));
+        comboBox.setPrefWidth(100);
+        return comboBox;
+    }
+
+    private void setupHandler(Button addRecordButton, Button exitButton, Button showHideButton, Button generationButton, Stage stage) {
+//        addRecordButton.setOnAction(event -> handler.addRecordButton(stage));
+//        exitButton.setOnAction(event -> handler.exitWindow(stage));
+//        showHideButton.setOnAction(e -> handler.showHideButton(showHideButton, passwordField, visiblePasswordField, passwordConfirmField));
+//        generationButton.setOnAction(event -> handler.generationButton(stage));
+//
+//        handler.checkGroup(comboBoxGroup, personalGroupField);
+    }
+
+    private void setupBindings() {
+
+    }
 }

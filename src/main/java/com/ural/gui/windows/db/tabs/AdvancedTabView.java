@@ -28,6 +28,7 @@ public class AdvancedTabView implements TabView {
         // Основные поля вкладки
         Label hader = new Label("Добавьте описание для базы данных.");
         TextArea description = new TextArea();
+        description.setId("description");
 
         // установка привязок
         setupBindings(description);

@@ -1,8 +1,12 @@
 package com.ural.manager.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PasswordConfiguration {
-    private int length = 20;
-    private int count;
+    private static final int DEFAULT_LENGTH = 20;
+
+    private int length;
     private boolean lowerCase;
     private boolean upperCase;
     private boolean digits;
@@ -25,59 +29,65 @@ public class PasswordConfiguration {
         }
 
         public Builder addLowerCase(boolean checkMark) {
-            config.count++;
             config.lowerCase = checkMark;
             return this;
         }
 
         public Builder addUpperCase(boolean checkMark) {
-            config.count++;
             config.upperCase = checkMark;
             return this;
         }
 
         public Builder addDigits(boolean checkMark) {
-            config.count++;
             config.digits = checkMark;
             return this;
         }
 
         public Builder addMinus(boolean checkMark) {
-            config.count++;
             config.minus = checkMark;
             return this;
         }
 
         public Builder addUnderscore(boolean checkMark) {
-            config.count++;
             config.underscore = checkMark;
             return this;
         }
 
         public Builder addSpace(boolean checkMark) {
-            config.count++;
             config.space = checkMark;
             return this;
         }
 
         public Builder addSpecialSymbols(boolean checkMark) {
-            config.count++;
             config.specialSymbols = checkMark;
             return this;
         }
 
         public Builder addStaples(boolean checkMark) {
-            config.count++;
             config.staples = checkMark;
             return this;
         }
 
         public PasswordConfiguration build() {
+            if (config.length <= 0) {
+                addLength(DEFAULT_LENGTH);
+            }
             return config;
         }
     }
 
-    public int getCount() {
+    public int getEnabledOptions() {
+        int count = 0;
+
+        if (isLowerCase()) count++;
+        if (isUpperCase()) count++;
+        if (isDigits()) count++;
+        if (isMinus()) count++;
+        if (isUnderscore()) count++;
+        if (isSpace()) count++;
+        if (isSpecialSymbols()) count++;
+        if (isStaples()) count++;
+
         return count;
     }
 

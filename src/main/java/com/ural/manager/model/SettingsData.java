@@ -58,7 +58,7 @@ public class SettingsData {
         }
 
         public SettingsData build() {
-            if (settings.getIterations() == 0) {
+            if (settings.iterations <= 0) {
                 iterations(DEFAULT_ITERATION_PBKDF2);
             }
             return settings;

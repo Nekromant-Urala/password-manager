@@ -3,6 +3,7 @@ package com.ural.security.generator;
 import java.security.SecureRandom;
 
 public abstract class Generator {
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     /**
      * Метод для случайной выборки из строки заданного числа символов.
@@ -20,11 +21,12 @@ public abstract class Generator {
         }
         StringBuilder symbols = new StringBuilder();
         for (int i = 0; i < quantity; i++) {
-            int idx = new SecureRandom().nextInt(inputString.length());
+            int idx = secureRandom.nextInt(inputString.length());
             symbols.append(inputString.charAt(idx));
         }
 
-        return symbols.toString();    }
+        return symbols.toString();
+    }
 
     /**
      * Метод для перешивания последовательности в случайном порядке.
@@ -34,11 +36,13 @@ public abstract class Generator {
      */
     protected static String shuffle(String password) {
         char[] result = password.toCharArray();
-        for (int i = 0; i < result.length; i++) {
-            int idx = new SecureRandom().nextInt(result.length - i);
-            char temp = result[i];
-            result[i] = result[idx];
-            result[idx] = temp;
+        for (int j = 0; j < 3; ++j) {
+            for (int i = 0; i < result.length; i++) {
+                int idx = secureRandom.nextInt(result.length - i);
+                char temp = result[i];
+                result[i] = result[idx];
+                result[idx] = temp;
+            }
         }
 
         return new String(result);

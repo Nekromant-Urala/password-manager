@@ -8,6 +8,7 @@ import com.ural.gui.windows.db.tabs.SecurityTabView;
 import com.ural.manager.model.SettingsData;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
@@ -44,10 +45,12 @@ public class CreationFileWindow implements Window {
         // Основные поля окна
         TabPane tabPane = new TabPane();
         Button okButton = new Button("Создать");
+        okButton.setId("okButton");
         okButton.setDisable(true);
         Button exitButton = new Button("Отмена");
+        exitButton.setId("exitButton");
 
-        TabView basicTab = new BasicTabView(settings, handler);
+        TabView basicTab = new BasicTabView(settings);
         TabView securityTab = new SecurityTabView(settings, handler);
         TabView advancedTab = new AdvancedTabView(settings);
 
@@ -57,9 +60,6 @@ public class CreationFileWindow implements Window {
                 securityTab.createTab(createFileStage),
                 advancedTab.createTab(createFileStage)
         );
-
-        // установка привязок
-        setupHandler(createFileStage, okButton, exitButton);
 
         // Основной контейнер
         VBox root = new VBox();
@@ -72,6 +72,8 @@ public class CreationFileWindow implements Window {
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         createFileStage.setScene(scene);
         createFileStage.setResizable(false);
+        // установка привязок
+        setupHandler(createFileStage);
         createFileStage.show();
     }
 
@@ -91,16 +93,31 @@ public class CreationFileWindow implements Window {
         return container;
     }
 
-    private void setupHandler(Stage stage, Button okButton , Button exitButton) {
-        handler.getBasicField(okButton);
+    // установка действий для всех кнопок и событий данного окна
+    private void setupHandler(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        Button okButton = (Button) root.lookup("#okButton");
+        Button exitButton = (Button) root.lookup("#exitButton");
+        Button showHideButton = (Button) root.lookup("#showHideButton");
+        Button browseButton = (Button) root.lookup("#browseButton");
+
+        handler.checkPasswordField(stage);
 
         okButton.setOnAction(event -> {
-            handler.successfulEvent(stage, settings);
+            handler.setSettingsData(settings);
+            handler.successfulEvent(stage);
         });
 
         exitButton.setOnAction(event -> {
             handler.closingEvent(stage);
         });
 
+        showHideButton.setOnAction(event -> {
+            handler.hideEvent(stage);
+        });
+
+        browseButton.setOnAction(event -> {
+            handler.searchEvent(stage);
+        });
     }
 }

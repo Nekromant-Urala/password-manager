@@ -3,10 +3,12 @@ package com.ural.gui.windows.generator;
 import com.ural.gui.core.TabView;
 import com.ural.gui.core.Window;
 import com.ural.gui.windows.generator.tabs.AdvancedTabView;
+import com.ural.gui.windows.generator.tabs.GeneratedPasswordsTaView;
 import com.ural.gui.windows.generator.tabs.SettingsTabView;
 import com.ural.manager.model.PasswordConfiguration;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
@@ -19,7 +21,6 @@ import javafx.stage.Stage;
 public class GeneratorWindow implements Window {
     private static final int HEIGHT = 280;
     private static final int WIDTH = 450;
-
 
     private final GeneratorHandler handler;
     private final PasswordConfiguration.Builder configuration;
@@ -40,31 +41,29 @@ public class GeneratorWindow implements Window {
 
         // Кнопки внизу окна
         Button exitButton = new Button("Закрыть");
+        exitButton.setId("exitButton");
         Button okButton = new Button("Сгенерировать");
+        okButton.setDisable(true);
+        okButton.setId("okButton");
         HBox buttonContainer = createButtonContainer(exitButton, okButton);
 
         // Создание вкладки "Настройки"
         TabView settingsTab = new SettingsTabView(handler, configuration);
         // Создание вкладки "Дополнительно"
-        TabView advancedTab = new AdvancedTabView(handler);
-        // Создание вкладки "Создание"
-//        TabView passwordsTabView = new GeneratedPasswordsTabView();
+        TabView advancedTab = new AdvancedTabView(handler, configuration);
+        // Вкладка создания
+        TabView generatedPasswordsTab = new GeneratedPasswordsTaView();
 
         // Создание общего контейнера для вкладок
         TabPane tabPane = new TabPane();
-
         tabPane.getTabs().addAll(
                 settingsTab.createTab(stage),
-                advancedTab.createTab(stage)
-//                passwordsTabView.createTab(stage)
+                advancedTab.createTab(stage),
+                generatedPasswordsTab.createTab(stage)
         );
-
-        // установка привязок
-        setHandler(generatorStage, exitButton);
 
         // Основной контейнер окна
         VBox root = new VBox();
-
         root.getChildren().addAll(
                 tabPane,
                 createSeparator(),
@@ -74,6 +73,8 @@ public class GeneratorWindow implements Window {
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         generatorStage.setScene(scene);
         generatorStage.setResizable(false);
+        // установка привязок
+        setHandler(generatorStage);
         generatorStage.show();
     }
 
@@ -93,7 +94,17 @@ public class GeneratorWindow implements Window {
         return container;
     }
 
-    private void setHandler(Stage generatorStage, Button exitButton) {
-        exitButton.setOnAction(event -> handler.closingEvent(generatorStage));
+    private void setHandler(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        Button exitButton = (Button) root.lookup("#exitButton");
+        Button okButton = (Button) root.lookup("#okButton");
+
+        handler.checkCheckBox(stage);
+
+        okButton.setOnAction(event -> {
+            handler.setConfiguration(configuration);
+            handler.successfulEvent(stage);
+        });
+        exitButton.setOnAction(event -> handler.closingEvent(stage));
     }
 }

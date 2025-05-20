@@ -33,19 +33,22 @@ public class InitialWindow implements Window {
 
     @Override
     public void createWindow(Stage stage) {
+        Stage initialStage = new Stage();
         // основные поля окна
         Button okButton = createButton("OK");
+        okButton.setId("okButton");
         okButton.setDisable(true);
         Button exitButton = createButton("Отмена");
+        exitButton.setId("exitButton");
         Button showHideButton = createButton("Показать");
+        showHideButton.setId("showHideButton");
 
         PasswordField passwordField = createPasswordField();
+        passwordField.setId("passwordField");
         TextField visiblePasswordField = createVisiblePasswordField();
+        visiblePasswordField.setId("visiblePasswordField");
 
-        Label masterPassLabel = createLabel("Мастер-пароль:");
-
-        // установка привязок
-        setupHandler(okButton, exitButton, showHideButton, passwordField, visiblePasswordField,stage);
+        Label masterPassLabel = createLabel();
 
         // Главный контейнер
         VBox root = new VBox();
@@ -63,18 +66,20 @@ public class InitialWindow implements Window {
 
         // Настройка окна
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        stage.setTitle("Ввод мастер-пароля");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        initialStage.setTitle("Ввод мастер-пароля");
+        initialStage.setScene(scene);
+        initialStage.setResizable(false);
+        // установка привязок
+        setupHandler(okButton, exitButton, showHideButton, initialStage);
+        initialStage.show();
     }
 
     public static void createInit(Stage stage) {
         new InitialWindow().createWindow(stage);
     }
 
-    private Label createLabel(String text) {
-        Label label = new Label(text);
+    private Label createLabel() {
+        Label label = new Label("Мастер-пароль:");
         label.setPadding(MARGINS_ELEMENTS);
         return label;
     }
@@ -145,11 +150,11 @@ public class InitialWindow implements Window {
         return container;
     }
 
-    private void setupHandler(Button okButton, Button exitButton, Button showHideButton, PasswordField passwordField, TextField visiblePasswordField, Stage stage) {
-        handler.checkPasswordField(okButton, passwordField, visiblePasswordField);
+    private void setupHandler(Button okButton, Button exitButton, Button showHideButton, Stage stage) {
+        handler.checkPasswordField(stage);
 
         showHideButton.setOnAction(event -> {
-            handler.hideEvent(showHideButton, passwordField, visiblePasswordField);
+            handler.hideEvent(stage);
         });
 
         okButton.setOnAction(event -> {
