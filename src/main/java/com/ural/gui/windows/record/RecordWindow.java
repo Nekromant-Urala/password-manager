@@ -1,10 +1,13 @@
 package com.ural.gui.windows.record;
 
 import com.ural.gui.core.Window;
+import com.ural.manager.model.PasswordEntre;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -25,9 +28,11 @@ public class RecordWindow implements Window {
     private static final int SPACING = 10;
 
     private final RecordHandler handler;
+    private final PasswordEntre.Builder passwordEntre;
 
     public RecordWindow() {
         this.handler = new RecordHandler();
+        this.passwordEntre = new PasswordEntre.Builder();
     }
 
     @Override
@@ -40,7 +45,7 @@ public class RecordWindow implements Window {
         recordStage.initOwner(stage);
         // поле для ввода названия пароля
         Label tittleLabel = createLabel("Название");
-        TextField tittleField = createTextField("Введите название для записи");
+        TextField tittleField = createTextField("Введите название для записи", TEXT_FIELD_WIDTH);
         tittleField.setId("tittleField");
         // контейнер названия
         HBox recordContainer = createContainer();
@@ -51,7 +56,7 @@ public class RecordWindow implements Window {
 
         // поле для ввода логина-пароля
         Label loginLabel = createLabel("Логин:");
-        TextField loginField = createTextField("Введите логин");
+        TextField loginField = createTextField("Введите логин", TEXT_FIELD_WIDTH);
         loginField.setId("loginField");
         // контейнер логина
         HBox loginContainer = createContainer();
@@ -62,7 +67,7 @@ public class RecordWindow implements Window {
 
         // группа пароля (ComboBox)
         Label groupLabel = createLabel("Группа:");
-        TextField groupField = createTextField("Введите название группы");
+        TextField groupField = createTextField("Введите название группы", TEXT_FIELD_WIDTH);
         groupField.setId("groupField");
         groupField.setDisable(true);
         // комбобокс со списком допустимых групп
@@ -80,14 +85,15 @@ public class RecordWindow implements Window {
         Label passwordLabel = createLabel("Пароль:");
         PasswordField passwordField = createPasswordField();
         passwordField.setId("passwordField");
-        TextField visiblePasswordField = createPasswordField();
-        visiblePasswordField.setId("passwordField");
+
+        TextField visiblePasswordField = createTextField("Введите пароль", TEXT_FIELD_PASSWORD_WIDTH);
+        visiblePasswordField.setId("visiblePasswordField");
         visiblePasswordField.setVisible(false);
         visiblePasswordField.setManaged(false);
         // поле для подтверждения пароля
         Label confirmPasswordLabel = createLabel("Подтверждение:");
         PasswordField passwordConfirmField = createPasswordField();
-        passwordField.setId("passwordConfirmField");
+        passwordConfirmField.setId("passwordConfirmField");
         // кнопка скрыть/показать пароль
         Button showHideButton = new Button("Показать");
         showHideButton.setId("showHideButton");
@@ -115,7 +121,7 @@ public class RecordWindow implements Window {
 
         // поле для ввода ссылки (сервиса) для которого создана запись
         Label urlLabel = createLabel("Сервис:");
-        TextField urlField = createTextField("Введите название/ссылку сервиса");
+        TextField urlField = createTextField("Введите название/ссылку сервиса", TEXT_FIELD_WIDTH);
         urlField.setId("urlField");
         // контейнер ссылки
         HBox urlContainer = createContainer();
@@ -138,17 +144,15 @@ public class RecordWindow implements Window {
         );
 
         // Кнопки внизу окна
-        Button addRecordButton = new Button("Добавить");
-        addRecordButton.setDisable(true);
-        addRecordButton.setId("addRecordButton");
+        Button okButton = new Button("Добавить");
+        okButton.setDisable(true);
+        okButton.setId("okButton");
         Button exitButton = new Button("Закрыть");
         exitButton.setId("exitButton");
         // контейнер главных кнопок окна
-        HBox buttonsContainer = new HBox(SPACING, addRecordButton, exitButton);
+        HBox buttonsContainer = new HBox(SPACING, okButton, exitButton);
         buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
         buttonsContainer.setPadding(TOP_MARGIN);
-
-        setupHandler(addRecordButton, exitButton, showHideButton, generationButton, recordStage);
 
         // Главный контейнер окна
         VBox root = new VBox();
@@ -168,6 +172,9 @@ public class RecordWindow implements Window {
         Scene scene = new Scene(root, WIDTH_WINDOW, HEIGHT_WINDOW);
         recordStage.setResizable(false);
         recordStage.setScene(scene);
+        // установка обработчика
+        setupBindings(recordStage);
+        setupHandler(recordStage);
         recordStage.show();
     }
 
@@ -198,10 +205,10 @@ public class RecordWindow implements Window {
         return label;
     }
 
-    private TextField createTextField(String promptText) {
+    private TextField createTextField(String promptText, int width) {
         TextField textField = new TextField();
         textField.setPromptText(promptText);
-        textField.setPrefWidth(TEXT_FIELD_WIDTH);
+        textField.setPrefWidth(width);
         return textField;
     }
 
@@ -214,22 +221,76 @@ public class RecordWindow implements Window {
 
     private ComboBox<String> createListGroups() {
         ObservableList<String> groups = FXCollections.observableArrayList("Общие", "Сеть", "Интернет", "Почта", "Счета", "OC", "Другое");
-        ComboBox<String> comboBox = new ComboBox<>(groups);
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setItems(groups);
         comboBox.setValue(groups.get(0));
         comboBox.setPrefWidth(100);
         return comboBox;
     }
 
-    private void setupHandler(Button addRecordButton, Button exitButton, Button showHideButton, Button generationButton, Stage stage) {
-//        addRecordButton.setOnAction(event -> handler.addRecordButton(stage));
-//        exitButton.setOnAction(event -> handler.exitWindow(stage));
-//        showHideButton.setOnAction(e -> handler.showHideButton(showHideButton, passwordField, visiblePasswordField, passwordConfirmField));
-//        generationButton.setOnAction(event -> handler.generationButton(stage));
-//
-//        handler.checkGroup(comboBoxGroup, personalGroupField);
+    private void setupHandler(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        Button okButton = (Button) root.lookup("#okButton");
+        Button exitButton = (Button) root.lookup("#exitButton");
+        Button showHideButton = (Button) root.lookup("#showHideButton");
+        Button generationButton = (Button) root.lookup("#generationButton");
+
+        handler.checkGroup(stage);
+        handler.checkPasswordField(stage);
+
+        okButton.setOnAction(event -> {
+            handler.setPasswordEntre(passwordEntre);
+            handler.successfulEvent(stage);
+        });
+        exitButton.setOnAction(event -> handler.closingEvent(stage));
+        showHideButton.setOnAction(event -> handler.hideEvent(stage));
+        generationButton.setOnAction(event -> handler.generationEvent(stage));
     }
 
-    private void setupBindings() {
+    private void setupBindings(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        TextField tittleField = (TextField) root.lookup("#tittleField");
+        TextField loginField = (TextField) root.lookup("#loginField");
+        TextField groupField = (TextField) root.lookup("#groupField");
+        ComboBox<String> comboBoxGroup = (ComboBox<String>) root.lookup("#comboBoxGroup");
+        PasswordField passwordField = (PasswordField) root.lookup("#passwordField");
+        TextField visiblePasswordField = (TextField) root.lookup("#visiblePasswordField");
+        TextField urlField = (TextField) root.lookup("#urlField");
+        TextArea descriptionArea = (TextArea) root.lookup("#descriptionArea");
 
+        tittleField.textProperty().addListener((obs, oldValue, newValue) -> {
+            passwordEntre.addName(newValue);
+        });
+        loginField.textProperty().addListener((obs, oldValue, newValue) -> {
+            passwordEntre.addLogin(newValue);
+        });
+        passwordField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (passwordField.isVisible()) {
+                passwordEntre.addEncryptPassword(newValue);
+            }
+        });
+        visiblePasswordField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (visiblePasswordField.isVisible()) {
+                passwordEntre.addEncryptPassword(newValue);
+            }
+        });
+        urlField.textProperty().addListener((obs, oldValue, newValue) -> {
+            passwordEntre.addService(newValue);
+        });
+        descriptionArea.textProperty().addListener((obs, oldValue, newValue) -> {
+            passwordEntre.addNotion(newValue);
+        });
+        ChangeListener<String> groupListener = (obs, oldValue, newValue) -> {
+            String selectedGroup = groupField.isDisabled()
+                    ? comboBoxGroup.getValue()
+                    : groupField.getText();
+
+            if (selectedGroup != null && !selectedGroup.isEmpty()) {
+                passwordEntre.addGroup(selectedGroup);
+            }
+        };
+        comboBoxGroup.valueProperty().addListener(groupListener);
+        groupField.textProperty().addListener(groupListener);
+        groupListener.changed(null, null, null);
     }
 }

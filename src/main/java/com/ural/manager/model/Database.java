@@ -6,7 +6,7 @@ import java.util.List;
 public class Database {
     private int version;
     private MetaData metaData;
-    private List<Record> entries;
+    private List<PasswordEntre> entries;
 
     private Database() {
     }
@@ -32,7 +32,7 @@ public class Database {
             return this;
         }
 
-        public Builder entries(List<Record> entries) {
+        public Builder entries(List<PasswordEntre> entries) {
             database.entries = entries;
             return this;
         }
@@ -53,7 +53,7 @@ public class Database {
         return metaData;
     }
 
-    public List<Record> getEntries() {
+    public List<PasswordEntre> getEntries() {
         return entries;
     }
 }

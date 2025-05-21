@@ -49,11 +49,12 @@ public class CreationFileHandler extends BaseHandlerEvent {
             String confirmPassword = passwordConfirmField.getText();
 
             boolean validPassword = passwordConfirmField.isDisabled()  // Если поле подтверждения отключено
-                    || password.equals(confirmPassword);              // Или пароли совпадают
+                    ? !password.isEmpty()
+                    : password.equals(confirmPassword);            // Или пароли совпадают
 
             boolean passwordNotEmpty = passwordConfirmField.isDisabled()  // Если поле подтверждения отключено
-                    || (!passwordField.getText().isEmpty()               // Или оба поля заполнены
-                    && !passwordConfirmField.getText().isEmpty());
+                    ? !password.isEmpty()
+                    : (!password.isEmpty() && !passwordConfirmField.getText().isEmpty());
 
             boolean pathNotEmpty = !nameFileField.getText().isEmpty()
                     && !pathFileField.getText().isEmpty();
@@ -71,6 +72,7 @@ public class CreationFileHandler extends BaseHandlerEvent {
 
         // Добавляем слушатели
         passwordField.textProperty().addListener(listener);
+        visiblePasswordField.textProperty().addListener(listener);
         passwordConfirmField.textProperty().addListener(listener);
         nameFileField.textProperty().addListener(listener);
         pathFileField.textProperty().addListener(listener);

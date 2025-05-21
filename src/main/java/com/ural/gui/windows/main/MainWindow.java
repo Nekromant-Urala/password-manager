@@ -1,7 +1,7 @@
 package com.ural.gui.windows.main;
 
 import com.ural.gui.core.Window;
-import com.ural.manager.model.Record;
+import com.ural.manager.model.PasswordEntre;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -42,35 +42,35 @@ public class MainWindow implements Window {
         VBox groups = createListGroups();
 
         // Создаем список объектов
-        ObservableList<com.ural.manager.model.Record> records = FXCollections.observableArrayList(
+        ObservableList<PasswordEntre> records = FXCollections.observableArrayList(
         );
 
 
         // Контейнер для демонстрации и взаимодействия с записями (паролями)
-        TableView<com.ural.manager.model.Record> table = new TableView<>(records);
+        TableView<PasswordEntre> table = new TableView<>(records);
         table.setPrefSize(1000, 500);
         table.setStyle(STYLE_BORDER_CONTAINER);
         table.setPlaceholder(new Label("Нет записей для отображения"));
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
 
         // Столбец для вывода названия записи
-        TableColumn<com.ural.manager.model.Record, String> nameColumn = createColumn("Название", "name");
+        TableColumn<PasswordEntre, String> nameColumn = createColumn("Название", "name");
         table.getColumns().add(nameColumn);
 
         // Столбец для вывода логина записи
-        TableColumn<com.ural.manager.model.Record, String> loginColumn = createColumn("Логин", "login");
+        TableColumn<PasswordEntre, String> loginColumn = createColumn("Логин", "login");
         table.getColumns().add(loginColumn);
 
         // Столбец для вывода пароля
-        TableColumn<com.ural.manager.model.Record, String> passwordColumn = createColumn("Пароль", "password");
+        TableColumn<PasswordEntre, String> passwordColumn = createColumn("Пароль", "password");
         table.getColumns().add(passwordColumn);
 
         // Столбец для вывода сервиса
-        TableColumn<com.ural.manager.model.Record, String> serviceColumn = createColumn("Сервис", "service");
+        TableColumn<PasswordEntre, String> serviceColumn = createColumn("Сервис", "service");
         table.getColumns().add(serviceColumn);
 
         // Столбец для вывода заметок
-        TableColumn<Record, String> notionColumn = createColumn("Заметки", "notion");
+        TableColumn<PasswordEntre, String> notionColumn = createColumn("Заметки", "notion");
         table.getColumns().add(notionColumn);
 
         // Поле для вывода подробной информации о записи
@@ -107,6 +107,7 @@ public class MainWindow implements Window {
         Label mail = createLabelGroup("Почта");
         Label account = createLabelGroup("Счета");
         Label oc = createLabelGroup("OC");
+        Label other = createLabelGroup("Другое");
 
         groupsContainer.setPadding(new Insets(0, 0, 0, 50));
         groupsContainer.getChildren().addAll(
@@ -115,7 +116,8 @@ public class MainWindow implements Window {
                 internet,
                 mail,
                 account,
-                oc
+                oc,
+                other
         );
 
         groupList.getChildren().addAll(
@@ -205,8 +207,8 @@ public class MainWindow implements Window {
      * @param field      название поля класса, за которым необходимо закрепить колонку таблицы
      * @return Возвращает колонку для создания таблицы
      */
-    private TableColumn<Record, String> createColumn(String nameColumn, String field) {
-        TableColumn<Record, String> column = new TableColumn<>();
+    private TableColumn<PasswordEntre, String> createColumn(String nameColumn, String field) {
+        TableColumn<PasswordEntre, String> column = new TableColumn<>();
         column.setCellValueFactory(new PropertyValueFactory<>(field));
         Label hader = new Label(nameColumn);
         hader.setAlignment(Pos.CENTER_LEFT);
