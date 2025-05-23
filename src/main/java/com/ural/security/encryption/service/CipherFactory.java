@@ -4,7 +4,7 @@ import com.ural.security.encryption.SymmetricCipher;
 import com.ural.security.encryption.cipher.aes.AdvancedEncryptionStandard;
 import com.ural.security.encryption.cipher.chacha20.ChaCha20;
 import com.ural.security.encryption.cipher.des.TripleDataEncryptionStandard;
-import com.ural.security.encryption.cipher.twofish.TwoFish;
+import com.ural.security.encryption.cipher.twofish.Twofish;
 import com.ural.security.encryption.spec.CipherAlgorithm;
 
 import static com.ural.security.encryption.spec.CipherAlgorithm.*;
@@ -25,7 +25,7 @@ public class CipherFactory {
         return switch (algorithm) {
             case AES_MODE -> new AdvancedEncryptionStandard();
             case CHACHA20_MODE -> new ChaCha20();
-            case TWOFISH_MODE -> new TwoFish();
+            case TWOFISH_MODE -> new Twofish();
             case DES_MODE -> new TripleDataEncryptionStandard();
         };
     }

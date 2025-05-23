@@ -10,10 +10,10 @@ import javax.crypto.spec.GCMParameterSpec;
 
 import java.security.Security;
 
-import static com.ural.security.encryption.cipher.twofish.TwoFishSpec.TWOFISH;
+import static com.ural.security.encryption.cipher.twofish.TwofishSpec.TWOFISH;
 import static com.ural.security.encryption.spec.CipherAlgorithm.TWOFISH_MODE;
 
-public class TwoFish implements SymmetricCipher {
+public class Twofish implements SymmetricCipher {
 
     @Override
     public byte[] encrypt(byte[] byteArrayToEncrypt, SecretKey key, byte[] nonce) throws Exception {

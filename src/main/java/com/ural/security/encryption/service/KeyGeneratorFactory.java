@@ -1,6 +1,7 @@
 package com.ural.security.encryption.service;
 
 import com.ural.security.encryption.key.Argon2KeyGenerator;
+import com.ural.security.encryption.key.DESedeKeyGenerator;
 import com.ural.security.encryption.key.PBKDF2KeyGenerator;
 import com.ural.security.encryption.key.SecretKeyGenerator;
 import com.ural.security.encryption.spec.KeyGenerator;
@@ -14,6 +15,7 @@ public class KeyGeneratorFactory {
         return switch (keyGenerator.getName()) {
             case "Argon2" -> new Argon2KeyGenerator();
             case "PBKDF2" -> new PBKDF2KeyGenerator();
+            case "3DES" -> new DESedeKeyGenerator();
             default ->
                     throw new IllegalArgumentException("Данный алгоритм не поддерживается: " + keyGenerator.getName());
         };

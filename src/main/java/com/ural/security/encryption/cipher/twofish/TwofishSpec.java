@@ -2,7 +2,7 @@ package com.ural.security.encryption.cipher.twofish;
 
 import com.ural.security.encryption.spec.AlgorithmSpec;
 
-public enum TwoFishSpec implements AlgorithmSpec {
+public enum TwofishSpec implements AlgorithmSpec {
     TWOFISH(256, 128, 12, 16);
 
     private final int keyLengthBit;
@@ -10,7 +10,7 @@ public enum TwoFishSpec implements AlgorithmSpec {
     private final int saltLengthByte;
     private final int ivLengthByte;
 
-    TwoFishSpec(int keyLengthBit, int tagLengthBit, int ivLengthByte, int saltLengthByte) {
+    TwofishSpec(int keyLengthBit, int tagLengthBit, int ivLengthByte, int saltLengthByte) {
         this.tagLengthBit = tagLengthBit;
         this.keyLengthBit = keyLengthBit;
         this.ivLengthByte = ivLengthByte;

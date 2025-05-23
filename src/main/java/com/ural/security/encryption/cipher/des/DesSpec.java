@@ -3,7 +3,7 @@ package com.ural.security.encryption.cipher.des;
 import com.ural.security.encryption.spec.AlgorithmSpec;
 
 public enum DesSpec implements AlgorithmSpec {
-    DES(168, 8, 16);
+    DES(192, 8, 16);
 
     private final int keyLengthBit;
     private final int ivLengthByte;
