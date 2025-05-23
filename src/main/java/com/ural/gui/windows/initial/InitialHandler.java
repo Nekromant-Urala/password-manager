@@ -4,7 +4,6 @@ package com.ural.gui.windows.initial;
 import com.ural.gui.core.BaseHandlerEvent;
 import com.ural.gui.windows.main.MainWindow;
 import com.ural.manager.service.AuthService;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -14,7 +13,7 @@ import javafx.stage.Stage;
 
 
 public class InitialHandler extends BaseHandlerEvent {
-    private static final MainWindow main = new MainWindow();
+//    private static final MainWindow main = new MainWindow();
     private final AuthService authService;
 
     public InitialHandler() {
@@ -25,7 +24,7 @@ public class InitialHandler extends BaseHandlerEvent {
     public void successfulEvent(Stage stage) {
         // метод проверки пароля и переход на мейн окно
         if (authService.verifyPassword(getPassword(stage))) {
-            main.createWindow(stage);
+            new MainWindow().createWindow(stage);
             stage.close();
         } else {
             showInfo();

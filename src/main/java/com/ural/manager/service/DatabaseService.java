@@ -48,8 +48,8 @@ public class DatabaseService {
                     .build();
 
             Database db = new Database.Builder()
-                    .version(1)
-                    .metaData(meta)
+                    .addVersion(1)
+                    .addMetaData(meta)
                     .build();
 
             String json = serializer.serialize(db);
@@ -61,9 +61,13 @@ public class DatabaseService {
         }
     }
 
-    public Database loadDatabase(String pathData) {
-        Path path = Paths.get(pathData);
-        String jsonContent = FileUtils.readFile(path);
+    public void saveChanges(Path path, Database database) {
+        String jsonFormat = serializer.serialize(database);
+        FileUtils.saveToFile(path, jsonFormat);
+    }
+
+    public Database loadDatabase(Path pathData) {
+        String jsonContent = FileUtils.readFile(pathData);
         return serializer.deserialize(jsonContent, new TypeReference<>() {
         });
     }

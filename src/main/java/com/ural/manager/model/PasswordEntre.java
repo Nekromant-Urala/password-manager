@@ -1,6 +1,7 @@
 package com.ural.manager.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class PasswordEntre {
     private int id;
@@ -91,8 +92,24 @@ public class PasswordEntre {
         return createdAt;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
     public String getNotion() {
         return notion;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PasswordEntre that)) return false;
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(service, that.service) && Objects.equals(login, that.login) && Objects.equals(encryptPassword, that.encryptPassword) && Objects.equals(createdAt, that.createdAt) && Objects.equals(notion, that.notion) && Objects.equals(group, that.group);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, service, login, encryptPassword, createdAt, notion, group);
     }
 
     @Override

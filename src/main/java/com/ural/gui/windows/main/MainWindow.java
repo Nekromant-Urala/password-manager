@@ -2,13 +2,16 @@ package com.ural.gui.windows.main;
 
 import com.ural.gui.core.Window;
 import com.ural.manager.model.PasswordEntre;
+import com.ural.manager.serialization.JsonFileWatcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -42,12 +45,11 @@ public class MainWindow implements Window {
         VBox groups = createListGroups();
 
         // Создаем список объектов
-        ObservableList<PasswordEntre> records = FXCollections.observableArrayList(
-        );
-
+        ObservableList<PasswordEntre> records = FXCollections.observableArrayList();
 
         // Контейнер для демонстрации и взаимодействия с записями (паролями)
         TableView<PasswordEntre> table = new TableView<>(records);
+        table.setId("table");
         table.setPrefSize(1000, 500);
         table.setStyle(STYLE_BORDER_CONTAINER);
         table.setPlaceholder(new Label("Нет записей для отображения"));
@@ -62,7 +64,7 @@ public class MainWindow implements Window {
         table.getColumns().add(loginColumn);
 
         // Столбец для вывода пароля
-        TableColumn<PasswordEntre, String> passwordColumn = createColumn("Пароль", "password");
+        TableColumn<PasswordEntre, String> passwordColumn = createColumn("Пароль", "encryptPassword");
         table.getColumns().add(passwordColumn);
 
         // Столбец для вывода сервиса
@@ -90,6 +92,9 @@ public class MainWindow implements Window {
         mainWindow.setScene(scene);
         mainWindow.setTitle("Hell Spring");
         mainWindow.setResizable(false);
+        // установка обработчика
+        setupHandler(mainWindow);
+        setupContextMenu(mainWindow);
         mainWindow.show();
     }
 
@@ -147,6 +152,38 @@ public class MainWindow implements Window {
         return label;
     }
 
+    private void setupContextMenu(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        TableView<PasswordEntre> table = (TableView<PasswordEntre>) root.lookup("#table");
+        // Создаем контекстное меню
+        ContextMenu contextMenu = new ContextMenu();
+
+        // Пункт "Добавить запись"
+        MenuItem addItem = new MenuItem("Добавить запись");
+        addItem.setOnAction(event -> handler.openRecordWindow(stage));
+
+        // Пункт "Удалить запись"
+        MenuItem deleteItem = new MenuItem("Удалить запись");
+        deleteItem.setOnAction(event -> handler.deletePasswordEntre(table.getSelectionModel().getSelectedItem()));
+
+        // Добавляем пункты в меню
+        contextMenu.getItems().addAll(addItem, deleteItem);
+
+        // Показываем меню при правом клике
+        table.setRowFactory(tv -> {
+            TableRow<PasswordEntre> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.SECONDARY && !row.isEmpty()) {
+                    contextMenu.show(row, event.getScreenX(), event.getScreenY());
+                }
+            });
+            return row;
+        });
+
+        // Альтернативный вариант (если меню должно появляться и на пустом месте таблицы)
+        table.setContextMenu(contextMenu);
+    }
+
     private void createElementsMenuBar(MenuBar menuBar, Stage stage) {
         // Элементы строки меню
         Menu file = new Menu("Файл");
@@ -156,15 +193,25 @@ public class MainWindow implements Window {
 
         // Элементы каждого из меню
         MenuItem createNewDatabase = new MenuItem("Создать базу данных");
+        createNewDatabase.setId("createNewDatabase");
         MenuItem saveChanges = new MenuItem("Сохранить изменения");
+        saveChanges.setId("saveChanges");
         MenuItem parameterDatabase = new MenuItem("Текущие параметры");
+        parameterDatabase.setId("parameterDatabase");
         MenuItem editMasterPassword = new MenuItem("Изменить мастер-пароль");
+        editMasterPassword.setId("editMasterPassword");
         MenuItem exitItemMenu = new MenuItem("Выход");
+        exitItemMenu.setId("exitItemMenu");
         MenuItem addGroup = new MenuItem("Добавить группу");
+        addGroup.setId("addGroup");
         MenuItem editGroup = new MenuItem("Изменить группу");
+        editGroup.setId("editGroup");
         MenuItem deleteGroup = new MenuItem("Удалить группу");
+        deleteGroup.setId("deleteGroup");
         MenuItem addRecord = new MenuItem("Добавить записи");
+        addRecord.setId("addRecord");
         MenuItem generator = new MenuItem("Генератор");
+        generator.setId("generator");
 
         createNewDatabase.setOnAction(event -> handler.openDatabaseWindow(stage));
         generator.setOnAction(event -> handler.openGeneratorPasswordWindow(stage));
@@ -200,6 +247,10 @@ public class MainWindow implements Window {
                 record,
                 service
         );
+    }
+
+    private void setupHandler(Stage stage) {
+        handler.startWatch(stage);
     }
 
     /**

@@ -7,6 +7,8 @@ import com.ural.security.encryption.service.CipherFactory;
 import com.ural.security.encryption.service.EncryptionService;
 import com.ural.security.encryption.service.KeyGeneratorFactory;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +22,8 @@ public class AuthService {
     }
 
     public boolean verifyPassword(String inputPassword) {
-        Database database = databaseService.loadDatabase(fileStorage.loadPaths().get(0));
+        Path path = Paths.get(fileStorage.loadPaths().get(0));
+        Database database = databaseService.loadDatabase(path);
         MetaData metaData = database.getMetaData();
         // получаем данные, из json для генерации хеша для сравнения
         EncryptionService encryptionService = new EncryptionService(

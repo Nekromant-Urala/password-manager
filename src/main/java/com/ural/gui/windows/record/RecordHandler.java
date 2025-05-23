@@ -3,6 +3,7 @@ package com.ural.gui.windows.record;
 import com.ural.gui.core.BaseHandlerEvent;
 import com.ural.gui.windows.generator.GeneratorWindow;
 import com.ural.manager.model.PasswordEntre;
+import com.ural.manager.service.PasswordEntreService;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -12,20 +13,25 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class RecordHandler extends BaseHandlerEvent {
-    private static final GeneratorWindow generatorWindow = new GeneratorWindow();
     private static final String OTHER = "Другое";
+    private final PasswordEntreService passwordEntreService;
     private PasswordEntre passwordEntre;
+
+
+    public RecordHandler() {
+        this.passwordEntreService = new PasswordEntreService();
+    }
 
     @Override
     public void successfulEvent(Stage stage) {
         System.out.println(passwordEntre);
         // метод для внесения записи в базу
-        // какой-то метод
+        passwordEntreService.addPasswordEntre(passwordEntre);
         stage.close();
     }
 
     void generationEvent(Stage stage) {
-        generatorWindow.createWindow(stage);
+        new GeneratorWindow().createWindow(stage);
     }
 
     void setPasswordEntre(PasswordEntre.Builder passwordEntre) {

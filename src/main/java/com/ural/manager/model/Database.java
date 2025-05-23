@@ -6,13 +6,9 @@ import java.util.List;
 public class Database {
     private int version;
     private MetaData metaData;
-    private List<PasswordEntre> entries;
+    private List<PasswordEntre> entries = new ArrayList<>();
 
     private Database() {
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {
@@ -22,25 +18,27 @@ public class Database {
             this.database = new Database();
         }
 
-        public Builder version(int version) {
+        public Builder addVersion(int version) {
             database.version = version;
             return this;
         }
 
-        public Builder metaData(MetaData meta) {
+        public Builder addMetaData(MetaData meta) {
             database.metaData = meta;
             return this;
         }
 
-        public Builder entries(List<PasswordEntre> entries) {
+        public Builder addEntre(PasswordEntre entre) {
+            database.entries.add(entre);
+            return this;
+        }
+
+        public Builder addEntries(List<PasswordEntre> entries) {
             database.entries = entries;
             return this;
         }
 
         public Database build() {
-            if (database.entries == null) {
-                database.entries = new ArrayList<>();
-            }
             return database;
         }
     }
