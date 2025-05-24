@@ -5,8 +5,6 @@ import com.ural.security.encryption.spec.AlgorithmSpec;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 
 import static com.ural.security.encryption.cipher.des.DesSpec.DES;

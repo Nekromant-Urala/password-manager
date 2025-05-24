@@ -1,14 +1,12 @@
 package com.ural.security.encryption.service;
 
 import javax.crypto.SecretKey;
-import java.io.BufferedReader;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 
-import com.ural.manager.model.MetaData;
 import com.ural.security.encryption.RandomGenerator;
 import com.ural.security.encryption.SymmetricCipher;
 import com.ural.security.encryption.key.SecretKeyGenerator;
