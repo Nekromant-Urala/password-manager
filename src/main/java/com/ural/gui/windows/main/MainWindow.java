@@ -161,7 +161,10 @@ public class MainWindow implements Window {
 
         // Пункт "Получить пароль"
         MenuItem getPassword = new MenuItem("Получить пароль");
-        getPassword.setOnAction(event -> handler.getPassword());
+        getPassword.setOnAction(event -> {
+            handler.getPassword(table.getSelectionModel().getSelectedItem());
+            showNotification("Получение пароля", "Пароль успешно скопирован в буфер обмена.\n Через минуту он удалиться!");
+        });
 
         // Пункт "Добавить запись"
         MenuItem addItem = new MenuItem("Добавить запись");
@@ -172,7 +175,7 @@ public class MainWindow implements Window {
         deleteItem.setOnAction(event -> handler.deletePasswordEntre(table.getSelectionModel().getSelectedItem()));
 
         // Добавляем пункты в меню
-        contextMenu.getItems().addAll(addItem, deleteItem);
+        contextMenu.getItems().addAll(getPassword, addItem, deleteItem);
 
         // Показываем меню при правом клике
         table.setRowFactory(tv -> {
@@ -185,8 +188,17 @@ public class MainWindow implements Window {
             return row;
         });
 
-        // Альтернативный вариант (если меню должно появляться и на пустом месте таблицы)
         table.setContextMenu(contextMenu);
+    }
+
+    private void showNotification(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 
     private void createElementsMenuBar(MenuBar menuBar, Stage stage) {

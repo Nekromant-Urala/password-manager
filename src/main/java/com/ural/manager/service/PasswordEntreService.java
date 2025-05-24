@@ -8,11 +8,16 @@ import com.ural.manager.serialization.JsonFileStorage;
 import com.ural.security.encryption.service.CipherFactory;
 import com.ural.security.encryption.service.EncryptionService;
 import com.ural.security.encryption.service.KeyGeneratorFactory;
+import javafx.application.Platform;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PasswordEntreService {
     private final DatabaseService databaseService;
@@ -31,6 +36,31 @@ public class PasswordEntreService {
                 KeyGeneratorFactory.getKeyGenerator(metaData.getKeyGenerator()),
                 metaData.getIterations()
         );
+    }
+
+    public void getPasswordFromEntre(PasswordEntre passwordEntre) {
+        byte[] encryptedPassword = passwordEntre.getPassword().getBytes(StandardCharsets.UTF_8);
+        try {
+            byte[] password = encryptionService.decrypt(encryptedPassword, MasterPasswordHolder.getMasterPassword());
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(new String(password, StandardCharsets.UTF_8));
+            clipboard.setContent(content);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        clearClipboard();
+    }
+
+    private void clearClipboard() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater( () -> {
+                    Clipboard.getSystemClipboard().clear();
+                });
+            }
+        }, 60000);
     }
 
     public void addPasswordEntre(PasswordEntre passwordEntre) {

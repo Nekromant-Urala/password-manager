@@ -38,8 +38,8 @@ public class MainHandler extends BaseHandlerEvent {
         Platform.exit();
     }
 
-    void getPassword() {
-
+    void getPassword(PasswordEntre passwordEntre) {
+        passwordEntreService.getPasswordFromEntre(passwordEntre);
     }
 
     void openDatabaseWindow(Stage stage) {
