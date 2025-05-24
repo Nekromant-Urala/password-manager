@@ -31,7 +31,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.ural.gui.init.InitWindow</mainClass>
+                            <mainClass>com.ural.com.ural.app.MainApp</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -57,6 +57,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.18.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk18on</artifactId>
+            <version>1.76</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.openjfx</groupId>
