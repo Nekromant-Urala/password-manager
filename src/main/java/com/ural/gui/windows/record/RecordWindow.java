@@ -266,12 +266,12 @@ public class RecordWindow implements Window {
         });
         passwordField.textProperty().addListener((obs, oldValue, newValue) -> {
             if (passwordField.isVisible()) {
-                passwordEntre.addEncryptPassword(newValue);
+                passwordEntre.addPassword(newValue);
             }
         });
         visiblePasswordField.textProperty().addListener((obs, oldValue, newValue) -> {
             if (visiblePasswordField.isVisible()) {
-                passwordEntre.addEncryptPassword(newValue);
+                passwordEntre.addPassword(newValue);
             }
         });
         urlField.textProperty().addListener((obs, oldValue, newValue) -> {

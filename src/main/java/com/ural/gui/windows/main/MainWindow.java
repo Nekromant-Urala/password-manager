@@ -3,6 +3,7 @@ package com.ural.gui.windows.main;
 import com.ural.gui.core.Window;
 import com.ural.manager.model.PasswordEntre;
 import com.ural.manager.serialization.JsonFileWatcher;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -64,7 +65,7 @@ public class MainWindow implements Window {
         table.getColumns().add(loginColumn);
 
         // Столбец для вывода пароля
-        TableColumn<PasswordEntre, String> passwordColumn = createColumn("Пароль", "encryptPassword");
+        TableColumn<PasswordEntre, String> passwordColumn = createPasswordColumn("Пароль", "password");
         table.getColumns().add(passwordColumn);
 
         // Столбец для вывода сервиса
@@ -158,6 +159,10 @@ public class MainWindow implements Window {
         // Создаем контекстное меню
         ContextMenu contextMenu = new ContextMenu();
 
+        // Пункт "Получить пароль"
+        MenuItem getPassword = new MenuItem("Получить пароль");
+        getPassword.setOnAction(event -> handler.getPassword());
+
         // Пункт "Добавить запись"
         MenuItem addItem = new MenuItem("Добавить запись");
         addItem.setOnAction(event -> handler.openRecordWindow(stage));
@@ -250,7 +255,25 @@ public class MainWindow implements Window {
     }
 
     private void setupHandler(Stage stage) {
+        stage.setOnCloseRequest(event -> handler.exitWindow(stage));
         handler.startWatch(stage);
+    }
+
+    private TableColumn<PasswordEntre, String> createPasswordColumn(String nameColumn, String field) {
+        TableColumn<PasswordEntre, String> column = createColumn(nameColumn, field);
+
+        column.setCellFactory(tc -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText("############");
+                }
+            }
+        });
+        return column;
     }
 
     /**
@@ -261,6 +284,7 @@ public class MainWindow implements Window {
     private TableColumn<PasswordEntre, String> createColumn(String nameColumn, String field) {
         TableColumn<PasswordEntre, String> column = new TableColumn<>();
         column.setCellValueFactory(new PropertyValueFactory<>(field));
+
         Label hader = new Label(nameColumn);
         hader.setAlignment(Pos.CENTER_LEFT);
         hader.setMaxWidth(Double.MAX_VALUE);

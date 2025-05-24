@@ -2,8 +2,10 @@ package com.ural.security.encryption.service;
 
 import javax.crypto.SecretKey;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -31,20 +33,20 @@ public class EncryptionService {
     }
 
     /**
-     * @param password       пароль (данные), которые необходимо зашифровать
+     * @param data       пароль (данные), которые необходимо зашифровать
      * @param masterPassword мастер-пароль, с помощью которого создается секретный ключ. Обязательно нужен
      * @return Возвращает зашифрованные данные в виде массива байт в кодировке BASE64
      * @throws Exception
      */
-    public byte[] encrypt(byte[] password, String masterPassword) throws Exception {
+    public byte[] encrypt(byte[] data, char[] masterPassword) throws Exception {
         // создание случайных последовательностей байт для "соли" и IV (nonce)
         byte[] salt = generator.getRandomBytes(cipher.getSpec().getSaltLengthByte());
         byte[] nonce = generator.getRandomBytes(cipher.getSpec().getNonceLengthByte());
 
         // создание секретного ключа
-        SecretKey key = keyGenerator.generateSecretKey(masterPassword.toCharArray(), salt, iterationCount, cipher.getName());
+        SecretKey key = keyGenerator.generateSecretKey(masterPassword, salt, iterationCount, cipher.getName());
         // шифрование пароля
-        byte[] encryptedText = cipher.encrypt(password, key, nonce);
+        byte[] encryptedText = cipher.encrypt(data, key, nonce);
         byte[] encryptedTextWithMeta = ByteBuffer.allocate(nonce.length + salt.length + encryptedText.length)
                 .put(salt)
                 .put(nonce)
@@ -62,11 +64,20 @@ public class EncryptionService {
      * @param nonce        IV, который использовался при шифровании пароля
      * @return Возвращает массив байт полученный при заданных данных
      */
-    public byte[] encrypt(String userPassword, byte[] salt, byte[] nonce) throws Exception {
+    public byte[] encrypt(char[] userPassword, byte[] salt, byte[] nonce) throws Exception {
         // создание секретного ключа
-        SecretKey key = keyGenerator.generateSecretKey(userPassword.toCharArray(), salt, iterationCount, cipher.getName());
+        SecretKey key = keyGenerator.generateSecretKey(userPassword, salt, iterationCount, cipher.getName());
         // воссоздание хеша
-        return cipher.encrypt(userPassword.getBytes(StandardCharsets.UTF_8), key, nonce);
+        return cipher.encrypt(convertArray(userPassword), key, nonce);
+    }
+
+    private byte[] convertArray(char[] chars) {
+        ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(CharBuffer.wrap(chars));
+        byte[] bytes = new byte[byteBuffer.remaining()];
+        byteBuffer.get(bytes);
+
+        Arrays.fill(byteBuffer.array(), (byte) 0);
+        return bytes;
     }
 
     /**
@@ -92,7 +103,7 @@ public class EncryptionService {
      * @return Возвращает расшифрованные данные в виде массива байт
      * @throws Exception
      */
-    public byte[] decrypt(byte[] encryptedTextWithMeta, String masterPassword) throws Exception {
+    public byte[] decrypt(byte[] encryptedTextWithMeta, char[] masterPassword) throws Exception {
         byte[] decoded = Base64.getDecoder().decode(encryptedTextWithMeta);
         ByteBuffer buffer = ByteBuffer.wrap(decoded);
 
@@ -105,7 +116,7 @@ public class EncryptionService {
         buffer.get(encryptedPassword);
 
         // создаем секретный ключ
-        SecretKey key = keyGenerator.generateSecretKey(masterPassword.toCharArray(), salt, iterationCount, cipher.getName());
+        SecretKey key = keyGenerator.generateSecretKey(masterPassword, salt, iterationCount, cipher.getName());
         return cipher.decrypt(encryptedPassword, key, nonce);
     }
 }

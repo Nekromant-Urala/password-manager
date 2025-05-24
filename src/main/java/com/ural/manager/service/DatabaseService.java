@@ -37,7 +37,7 @@ public class DatabaseService {
 
             byte[] encryptedPassword = encryptionService.encrypt(
                     settings.getMasterPassword().getBytes(),
-                    settings.getMasterPassword());
+                    settings.getMasterPassword().toCharArray());
 
             MetaData meta = new MetaData.Builder()
                     .nameDatabase(settings.getNameFile())

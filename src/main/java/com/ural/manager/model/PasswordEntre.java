@@ -4,12 +4,11 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class PasswordEntre {
-    private int id;
     private String name;
     private String service;
     private String login;
-    private String encryptPassword;
-    private LocalDate createdAt;
+    private String password;
+    private String createdAt;
     private String notion;
     private String group;
 
@@ -23,9 +22,16 @@ public class PasswordEntre {
             this.record = new PasswordEntre();
         }
 
-        public Builder addID(int id) {
-            record.id = id;
-            return this;
+        public Builder(PasswordEntre existingRecord) {
+            this.record = new PasswordEntre();
+
+            this.record.name = existingRecord.name;
+            this.record.service = existingRecord.service;
+            this.record.login = existingRecord.login;
+            this.record.password = existingRecord.password;
+            this.record.createdAt = existingRecord.createdAt;
+            this.record.notion = existingRecord.notion;
+            this.record.group = existingRecord.group;
         }
 
         public Builder addName(String name) {
@@ -48,13 +54,8 @@ public class PasswordEntre {
             return this;
         }
 
-        public Builder addEncryptPassword(String encryptPassword) {
-            record.encryptPassword = encryptPassword;
-            return this;
-        }
-
-        public Builder addCreatedAt(LocalDate createAt) {
-            record.createdAt = createAt;
+        public Builder addPassword(String password) {
+            record.password = password;
             return this;
         }
 
@@ -64,12 +65,9 @@ public class PasswordEntre {
         }
 
         public PasswordEntre build() {
+            record.createdAt = LocalDate.now().toString();
             return record;
         }
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
@@ -84,11 +82,11 @@ public class PasswordEntre {
         return login;
     }
 
-    public String getEncryptPassword() {
-        return encryptPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public LocalDate getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
@@ -104,22 +102,21 @@ public class PasswordEntre {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PasswordEntre that)) return false;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(service, that.service) && Objects.equals(login, that.login) && Objects.equals(encryptPassword, that.encryptPassword) && Objects.equals(createdAt, that.createdAt) && Objects.equals(notion, that.notion) && Objects.equals(group, that.group);
+        return Objects.equals(name, that.name) && Objects.equals(service, that.service) && Objects.equals(login, that.login) && Objects.equals(password, that.password) && Objects.equals(createdAt, that.createdAt) && Objects.equals(notion, that.notion) && Objects.equals(group, that.group);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, service, login, encryptPassword, createdAt, notion, group);
+        return Objects.hash(name, service, login, password, createdAt, notion, group);
     }
 
     @Override
     public String toString() {
         return "PasswordEntre{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", service='" + service + '\'' +
                 ", login='" + login + '\'' +
-                ", encryptPassword='" + encryptPassword + '\'' +
+                ", encryptPassword='" + password + '\'' +
                 ", createdAt=" + createdAt +
                 ", notion='" + notion + '\'' +
                 ", group='" + group + '\'' +

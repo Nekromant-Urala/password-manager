@@ -8,6 +8,7 @@ import com.ural.manager.model.PasswordEntre;
 import com.ural.manager.serialization.JsonFileStorage;
 import com.ural.manager.serialization.JsonFileWatcher;
 import com.ural.manager.service.PasswordEntreService;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
@@ -34,6 +35,11 @@ public class MainHandler extends BaseHandlerEvent {
     void exitWindow(Stage stage) {
         jsonFileWatcher.stopWatching();
         stage.close();
+        Platform.exit();
+    }
+
+    void getPassword() {
+
     }
 
     void openDatabaseWindow(Stage stage) {

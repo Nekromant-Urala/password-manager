@@ -21,7 +21,7 @@ public class AuthService {
         this.databaseService = new DatabaseService();
     }
 
-    public boolean verifyPassword(String inputPassword) {
+    public boolean verifyPassword(char[] inputPassword) {
         Path path = Paths.get(fileStorage.loadPaths().get(0));
         Database database = databaseService.loadDatabase(path);
         MetaData metaData = database.getMetaData();
