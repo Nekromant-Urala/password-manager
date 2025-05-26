@@ -15,9 +15,8 @@ import javafx.scene.input.ClipboardContent;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PasswordEntreService {
     private final DatabaseService databaseService;
@@ -79,6 +78,22 @@ public class PasswordEntreService {
 
         database.getEntries().add(entre);
         databaseService.saveChanges(pathFile, database);
+    }
+
+    public List<PasswordEntre> getEntreOfGroups(String nameGroup) {
+        List<PasswordEntre> entries = getAllElements();
+
+        return entries.stream()
+                .filter(element -> element.getGroup().equals(nameGroup))
+                .collect(LinkedList::new, LinkedList::offer, LinkedList::addAll);
+    }
+
+    public List<PasswordEntre> getOtherGroups() {
+        List<PasswordEntre> entries = getAllElements();
+        List<String> groups = List.of("Общие", "Сеть", "Интернет", "Почта", "Счета", "ОС");
+        return entries.stream()
+                .filter(element -> !groups.contains(element.getGroup()))
+                .collect(LinkedList::new, LinkedList::offer, LinkedList::addAll);
     }
 
     public void deletePasswordEntre(PasswordEntre passwordEntre) {

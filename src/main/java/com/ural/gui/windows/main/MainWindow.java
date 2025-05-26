@@ -96,24 +96,33 @@ public class MainWindow implements Window {
         // установка обработчика
         setupHandler(mainWindow);
         setupContextMenu(mainWindow);
+        setupActionOnLabel(mainWindow);
         mainWindow.show();
     }
 
-    private static VBox createListGroups() {
+    private VBox createListGroups() {
         VBox groupList = new VBox();
         groupList.setPrefSize(200, 600);
         groupList.setStyle(STYLE_BORDER_CONTAINER);
 
         Label allGroups = createLabelGroup("Все группы:");
+        allGroups.setId("allGroups");
 
         VBox groupsContainer = new VBox();
         Label general = createLabelGroup("Общие");
+        general.setId("general");
         Label network = createLabelGroup("Сеть");
+        network.setId("network");
         Label internet = createLabelGroup("Интернет");
+        internet.setId("internet");
         Label mail = createLabelGroup("Почта");
+        mail.setId("mail");
         Label account = createLabelGroup("Счета");
+        account.setId("account");
         Label oc = createLabelGroup("OC");
+        oc.setId("oc");
         Label other = createLabelGroup("Другое");
+        other.setId("other");
 
         groupsContainer.setPadding(new Insets(0, 0, 0, 50));
         groupsContainer.getChildren().addAll(
@@ -135,7 +144,7 @@ public class MainWindow implements Window {
         return groupList;
     }
 
-    private static Label createLabelGroup(String textLabel) {
+    private Label createLabelGroup(String textLabel) {
         Label label = new Label(textLabel);
         label.setStyle(STYLE_EXITED);
 
@@ -147,10 +156,31 @@ public class MainWindow implements Window {
         label.setOnMousePressed(e -> label.setStyle(STYLE_PRESSED));
         // после нажатия
         label.setOnMouseReleased(e -> label.setStyle(STYLE_EXITED));
-        // действие при клике
-        label.setOnMouseClicked(e -> System.out.println("Ого! Считан клик"));
 
         return label;
+    }
+
+    private void setupActionOnLabel(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+
+        Label allGroups = (Label) root.lookup("#allGroups");
+        Label general = (Label) root.lookup("#general");
+        Label network = (Label) root.lookup("#network");
+        Label internet = (Label) root.lookup("#internet");
+        Label mail = (Label) root.lookup("#mail");
+        Label account = (Label) root.lookup("#account");
+        Label oc = (Label) root.lookup("#oc");
+        Label other = (Label) root.lookup("#other");
+
+        // действие при клике
+        allGroups.setOnMouseClicked(e -> handler.filterByGroups(stage, allGroups.getText()));
+        general.setOnMouseClicked(e -> handler.filterByGroups(stage, general.getText()));
+        network.setOnMouseClicked(e -> handler.filterByGroups(stage, network.getText()));
+        internet.setOnMouseClicked(e -> handler.filterByGroups(stage, internet.getText()));
+        mail.setOnMouseClicked(e -> handler.filterByGroups(stage, mail.getText()));
+        account.setOnMouseClicked(e -> handler.filterByGroups(stage, account.getText()));
+        other.setOnMouseClicked(e -> handler.filterByGroups(stage, other.getText()));
+        oc.setOnMouseClicked(e -> handler.filterByGroups(stage, oc.getText()));
     }
 
     private void setupContextMenu(Stage stage) {
@@ -204,54 +234,33 @@ public class MainWindow implements Window {
     private void createElementsMenuBar(MenuBar menuBar, Stage stage) {
         // Элементы строки меню
         Menu file = new Menu("Файл");
-        Menu group = new Menu("Группа");
         Menu record = new Menu("Запись");
         Menu service = new Menu("Сервис");
 
         // Элементы каждого из меню
-        MenuItem createNewDatabase = new MenuItem("Создать базу данных");
-        createNewDatabase.setId("createNewDatabase");
-        MenuItem saveChanges = new MenuItem("Сохранить изменения");
-        saveChanges.setId("saveChanges");
         MenuItem parameterDatabase = new MenuItem("Текущие параметры");
         parameterDatabase.setId("parameterDatabase");
         MenuItem editMasterPassword = new MenuItem("Изменить мастер-пароль");
         editMasterPassword.setId("editMasterPassword");
         MenuItem exitItemMenu = new MenuItem("Выход");
         exitItemMenu.setId("exitItemMenu");
-        MenuItem addGroup = new MenuItem("Добавить группу");
-        addGroup.setId("addGroup");
-        MenuItem editGroup = new MenuItem("Изменить группу");
-        editGroup.setId("editGroup");
-        MenuItem deleteGroup = new MenuItem("Удалить группу");
-        deleteGroup.setId("deleteGroup");
         MenuItem addRecord = new MenuItem("Добавить записи");
         addRecord.setId("addRecord");
         MenuItem generator = new MenuItem("Генератор");
         generator.setId("generator");
 
-        createNewDatabase.setOnAction(event -> handler.openDatabaseWindow(stage));
         generator.setOnAction(event -> handler.openGeneratorPasswordWindow(stage));
         exitItemMenu.setOnAction(event -> handler.exitWindow(stage));
         addRecord.setOnAction(event -> handler.openRecordWindow(stage));
 
         // Добавление элементов в каждое меню
         file.getItems().addAll(
-                createNewDatabase,
-                new SeparatorMenuItem(),
-                saveChanges,
                 parameterDatabase,
                 editMasterPassword,
                 new SeparatorMenuItem(),
                 exitItemMenu
         );
 
-        group.getItems().addAll(
-                addGroup,
-                editGroup,
-                new SeparatorMenuItem(),
-                deleteGroup
-        );
         record.getItems().addAll(
                 addRecord
         );
@@ -260,7 +269,6 @@ public class MainWindow implements Window {
         );
         menuBar.getMenus().addAll(
                 file,
-                group,
                 record,
                 service
         );
