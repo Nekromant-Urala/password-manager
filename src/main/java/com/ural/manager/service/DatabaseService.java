@@ -1,7 +1,9 @@
 package com.ural.manager.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.ural.manager.model.Database;
+import com.ural.manager.model.MasterPasswordHolder;
 import com.ural.manager.model.MetaData;
 import com.ural.manager.model.SettingsData;
 import com.ural.manager.serialization.JsonFileStorage;
@@ -10,10 +12,22 @@ import com.ural.manager.serialization.Serializer;
 import com.ural.security.encryption.service.CipherFactory;
 import com.ural.security.encryption.service.KeyGeneratorFactory;
 import com.ural.security.encryption.service.EncryptionService;
+import com.ural.security.encryption.spec.CipherAlgorithm;
+import com.ural.security.encryption.spec.KeyGenerator;
+import org.bouncycastle.openssl.EncryptionException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 public class DatabaseService {
@@ -53,22 +67,42 @@ public class DatabaseService {
                     .build();
 
             String json = serializer.serialize(db);
-            FileUtils.saveToFile(path, json);
+            byte[] encryptedJson = EncryptionService.encryptDefault(json.getBytes(StandardCharsets.UTF_8), settings.getMasterPassword().toCharArray());
+            FileUtils.saveToFile(path, new String(encryptedJson, StandardCharsets.UTF_8));
             fileStorage.savePath(List.of(path.toString()));
-
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+        } catch (IOException e) {
+            System.err.println("Ошибка сериализации базы данных. " + e.getMessage());
+        } catch (KeyException | InvalidKeySpecException | NoSuchAlgorithmException |
+                 InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException |
+                 BadPaddingException e) {
+            System.err.println("Ошибка при шифровании. " + e.getMessage());
         }
     }
 
     public void saveChanges(Path path, Database database) {
-        String jsonFormat = serializer.serialize(database);
-        FileUtils.saveToFile(path, jsonFormat);
+        try {
+            String jsonFormat = serializer.serialize(database);
+            byte[] encryptedJson = EncryptionService.encryptDefault(jsonFormat.getBytes(StandardCharsets.UTF_8), MasterPasswordHolder.getMasterPassword());
+            FileUtils.saveToFile(path, new String(encryptedJson, StandardCharsets.UTF_8));
+        } catch (JsonProcessingException | EncryptionException | InvalidKeySpecException | NoSuchAlgorithmException |
+                 KeyException | InvalidAlgorithmParameterException | NoSuchPaddingException |
+                 IllegalBlockSizeException | BadPaddingException e) {
+            System.err.println("Ошибка при сохранении изменений в базе данных. " + e.getMessage());
+        }
+
     }
 
-    public Database loadDatabase(Path pathData) {
-        String jsonContent = FileUtils.readFile(pathData);
-        return serializer.deserialize(jsonContent, new TypeReference<>() {
+    public Database loadDatabase(Path pathData) throws IOException {
+        byte[] jsonContent = new byte[0];
+        try {
+            String encryptedJsonContent = FileUtils.readFile(pathData);
+            jsonContent = EncryptionService.decryptDefault(encryptedJsonContent.getBytes(StandardCharsets.UTF_8), MasterPasswordHolder.getMasterPassword());
+        } catch (KeyException | InvalidKeySpecException | NoSuchAlgorithmException |
+                 InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException |
+                 BadPaddingException e) {
+            System.err.println("Ошибка при дешифровании. " + e.getMessage());
+        }
+        return serializer.deserialize(new String(jsonContent), new TypeReference<>() {
         });
     }
 }

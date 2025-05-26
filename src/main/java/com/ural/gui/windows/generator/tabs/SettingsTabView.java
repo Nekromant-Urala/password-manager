@@ -3,6 +3,7 @@ package com.ural.gui.windows.generator.tabs;
 import com.ural.gui.core.TabView;
 import com.ural.gui.windows.generator.GeneratorHandler;
 import com.ural.manager.model.PasswordConfiguration;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;

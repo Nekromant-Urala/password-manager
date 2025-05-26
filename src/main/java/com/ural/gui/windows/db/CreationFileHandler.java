@@ -4,6 +4,7 @@ import com.ural.gui.core.BaseHandlerEvent;
 import com.ural.gui.windows.initial.InitialWindow;
 import com.ural.manager.model.SettingsData;
 import com.ural.manager.service.DatabaseService;
+
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;

@@ -2,6 +2,7 @@ package com.ural.gui.windows.initial;
 
 import com.ural.gui.core.Window;
 import com.ural.manager.serialization.JsonFileStorage;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

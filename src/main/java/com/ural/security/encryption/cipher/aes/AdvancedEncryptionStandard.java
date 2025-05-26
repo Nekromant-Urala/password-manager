@@ -1,10 +1,13 @@
 package com.ural.security.encryption.cipher.aes;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 
 import com.ural.security.encryption.SymmetricCipher;
+
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 import static com.ural.security.encryption.cipher.aes.AesSpec.AES;
 import static com.ural.security.encryption.spec.CipherAlgorithm.AES_MODE;
@@ -12,7 +15,8 @@ import static com.ural.security.encryption.spec.CipherAlgorithm.AES_MODE;
 public class AdvancedEncryptionStandard implements SymmetricCipher {
 
     @Override
-    public byte[] encrypt(byte[] byteArrayToEncrypt, SecretKey key, byte[] nonce) throws Exception {
+    public byte[] encrypt(byte[] byteArrayToEncrypt, SecretKey key, byte[] nonce) throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
         Cipher cipher = Cipher.getInstance(AES_MODE.getMode());
         cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(AES.getTagLengthBit(), nonce));
@@ -21,7 +25,8 @@ public class AdvancedEncryptionStandard implements SymmetricCipher {
     }
 
     @Override
-    public byte[] decrypt(byte[] byteArrayToDecrypt, SecretKey key, byte[] nonce) throws Exception {
+    public byte[] decrypt(byte[] byteArrayToDecrypt, SecretKey key, byte[] nonce) throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
         Cipher cipher = Cipher.getInstance(AES_MODE.getMode());
         cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(AES.getTagLengthBit(), nonce));

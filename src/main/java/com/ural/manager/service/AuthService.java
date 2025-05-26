@@ -1,5 +1,6 @@
 package com.ural.manager.service;
 
+import com.ural.manager.status.StatusVerifyPassword;
 import com.ural.manager.model.Database;
 import com.ural.manager.model.MetaData;
 import com.ural.manager.serialization.JsonFileStorage;
@@ -7,6 +8,7 @@ import com.ural.security.encryption.service.CipherFactory;
 import com.ural.security.encryption.service.EncryptionService;
 import com.ural.security.encryption.service.KeyGeneratorFactory;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -21,9 +23,15 @@ public class AuthService {
         this.databaseService = new DatabaseService();
     }
 
-    public boolean verifyPassword(char[] inputPassword) {
+    public StatusVerifyPassword verifyPassword(char[] inputPassword) {
         Path path = Paths.get(fileStorage.loadPaths().get(0));
-        Database database = databaseService.loadDatabase(path);
+        Database database;
+        try {
+            database = databaseService.loadDatabase(path);
+        } catch (IOException e) {
+            System.err.println("Ошибка при загрузке базы данных. " + e.getMessage());
+            return StatusVerifyPassword.ERROR;
+        }
         MetaData metaData = database.getMetaData();
         // получаем данные, из json для генерации хеша для сравнения
         EncryptionService encryptionService = new EncryptionService(
@@ -37,8 +45,12 @@ public class AuthService {
         try {
             encryptedPassword = encryptionService.encrypt(inputPassword, meta.get(0), meta.get(1));
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Ошибка при шифровании введенного пользователем пароля");
         }
-        return Arrays.equals(meta.get(2), encryptedPassword);
+        if (Arrays.equals(meta.get(2), encryptedPassword)) {
+            return StatusVerifyPassword.OK;
+        } else {
+            return StatusVerifyPassword.WRONG;
+        }
     }
 }

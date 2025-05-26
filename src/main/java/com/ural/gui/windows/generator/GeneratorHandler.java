@@ -3,6 +3,7 @@ package com.ural.gui.windows.generator;
 import com.ural.gui.core.BaseHandlerEvent;
 import com.ural.manager.model.PasswordConfiguration;
 import com.ural.manager.service.GeneratorService;
+
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;

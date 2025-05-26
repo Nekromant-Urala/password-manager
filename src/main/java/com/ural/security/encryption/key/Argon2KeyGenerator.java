@@ -13,7 +13,7 @@ public class Argon2KeyGenerator implements SecretKeyGenerator {
     private static final int parallelism = 2;
 
     @Override
-    public SecretKey generateSecretKey(char[] keyWord, byte[] salt, int iterationCount, String algorithmName) throws Exception {
+    public SecretKey generateSecretKey(char[] keyWord, byte[] salt, int iterationCount, String algorithmName) {
         Argon2Parameters.Builder builder = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_i)
                 .withVersion(Argon2Parameters.ARGON2_VERSION_13)
                 .withIterations(iterationCount)

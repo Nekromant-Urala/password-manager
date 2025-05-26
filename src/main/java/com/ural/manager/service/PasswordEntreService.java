@@ -12,30 +12,37 @@ import javafx.application.Platform;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class PasswordEntreService {
     private final DatabaseService databaseService;
-    private final EncryptionService encryptionService;
     private final Path pathFile;
-    private final Database database;
+    private EncryptionService encryptionService;
+    private Database database;
 
     public PasswordEntreService() {
-        this.databaseService = new DatabaseService();
+        databaseService = new DatabaseService();
         JsonFileStorage fileStorage = new JsonFileStorage();
-        this.pathFile = Paths.get(fileStorage.loadPaths().get(0));
-        database = databaseService.loadDatabase(pathFile);
-        MetaData metaData = database.getMetaData();
-        this.encryptionService = new EncryptionService(
-                CipherFactory.getNameCipher(metaData.getEncryptAlgorithm()),
-                KeyGeneratorFactory.getKeyGenerator(metaData.getKeyGenerator()),
-                metaData.getIterations()
-        );
+        pathFile = Paths.get(fileStorage.loadPaths().get(0));
+        loadDatabase(pathFile);
+    }
+
+    private void loadDatabase(Path path) {
+        try {
+            database = databaseService.loadDatabase(path);
+            MetaData metaData = database.getMetaData();
+            encryptionService = new EncryptionService(
+                    CipherFactory.getNameCipher(metaData.getEncryptAlgorithm()),
+                    KeyGeneratorFactory.getKeyGenerator(metaData.getKeyGenerator()),
+                    metaData.getIterations()
+            );
+        } catch (IOException e) {
+            System.err.println("Ошибка при загрузке базы данных. " + e.getMessage());
+        }
     }
 
     public void getPasswordFromEntre(PasswordEntre passwordEntre) {
@@ -56,7 +63,7 @@ public class PasswordEntreService {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater( () -> {
+                Platform.runLater(() -> {
                     Clipboard.getSystemClipboard().clear();
                 });
             }
@@ -81,15 +88,40 @@ public class PasswordEntreService {
         databaseService.saveChanges(pathFile, database);
     }
 
+    public List<PasswordEntre> getEntreOfGroups(String nameGroup) {
+        List<PasswordEntre> entries = getAllElements();
+
+        return entries.stream()
+                .filter(element -> element.getGroup().equals(nameGroup))
+                .collect(LinkedList::new, LinkedList::offer, LinkedList::addAll);
+    }
+
+    public List<PasswordEntre> getOtherGroups() {
+        List<PasswordEntre> entries = getAllElements();
+        List<String> groups = List.of("Общие", "Сеть", "Интернет", "Почта", "Счета", "OC");
+        return entries.stream()
+                .filter(element -> !groups.contains(element.getGroup()))
+                .collect(LinkedList::new, LinkedList::offer, LinkedList::addAll);
+    }
+
     public void deletePasswordEntre(PasswordEntre passwordEntre) {
-        Database database = databaseService.loadDatabase(pathFile);
-        database.getEntries().remove(passwordEntre);
-        databaseService.saveChanges(pathFile, database);
+        try {
+            Database database = databaseService.loadDatabase(pathFile);
+            database.getEntries().remove(passwordEntre);
+            databaseService.saveChanges(pathFile, database);
+        } catch (IOException e) {
+            System.err.println("Ошибка при загрузке базы данных. " + e.getMessage());
+        }
     }
 
 
     public List<PasswordEntre> getAllElements() {
-        Database database = databaseService.loadDatabase(pathFile);
-        return database.getEntries();
+        try {
+            Database database = databaseService.loadDatabase(pathFile);
+            return database.getEntries();
+        } catch (IOException e) {
+            System.err.println("Ошибка при загрузке базы данных. " + e.getMessage());
+            return List.of();
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.ural.gui.windows.record;
 
 import com.ural.gui.core.Window;
 import com.ural.manager.model.PasswordEntre;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

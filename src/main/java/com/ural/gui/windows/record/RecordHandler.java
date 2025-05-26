@@ -4,6 +4,7 @@ import com.ural.gui.core.BaseHandlerEvent;
 import com.ural.gui.windows.generator.GeneratorWindow;
 import com.ural.manager.model.PasswordEntre;
 import com.ural.manager.service.PasswordEntreService;
+
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;

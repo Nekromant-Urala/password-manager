@@ -1,7 +1,6 @@
 package com.ural.gui.windows.main;
 
 import com.ural.gui.core.BaseHandlerEvent;
-import com.ural.gui.windows.db.CreationFileWindow;
 import com.ural.gui.windows.generator.GeneratorWindow;
 import com.ural.gui.windows.record.RecordWindow;
 import com.ural.manager.model.PasswordEntre;
@@ -12,6 +11,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
@@ -38,12 +38,22 @@ public class MainHandler extends BaseHandlerEvent {
         Platform.exit();
     }
 
-    void getPassword(PasswordEntre passwordEntre) {
-        passwordEntreService.getPasswordFromEntre(passwordEntre);
+    void filterByGroups(Stage stage, String nameGroup) {
+        Parent root = stage.getScene().getRoot();
+        Label allGroups = (Label) root.lookup("#allGroups");
+        Label other = (Label) root.lookup("#other");
+        TableView<PasswordEntre> table = (TableView<PasswordEntre>) root.lookup("#table");
+        if (allGroups.getText().equals(nameGroup)) {
+            table.setItems(loadPasswordEntries());
+        } else if (other.getText().equals(nameGroup)) {
+            table.setItems(FXCollections.observableArrayList(passwordEntreService.getOtherGroups()));
+        } else {
+            table.setItems(FXCollections.observableArrayList(passwordEntreService.getEntreOfGroups(nameGroup)));
+        }
     }
 
-    void openDatabaseWindow(Stage stage) {
-        new CreationFileWindow().createWindow(stage);
+    void getPassword(PasswordEntre passwordEntre) {
+        passwordEntreService.getPasswordFromEntre(passwordEntre);
     }
 
     void deletePasswordEntre(PasswordEntre passwordEntre) {
@@ -61,7 +71,7 @@ public class MainHandler extends BaseHandlerEvent {
         jsonFileWatcher.startWatching();
     }
 
-    ObservableList<PasswordEntre> loadPasswordEntries() {
+    private ObservableList<PasswordEntre> loadPasswordEntries() {
         return FXCollections.observableArrayList(passwordEntreService.getAllElements());
     }
 }
