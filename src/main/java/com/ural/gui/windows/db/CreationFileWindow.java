@@ -6,6 +6,7 @@ import com.ural.gui.windows.db.tabs.AdvancedTabView;
 import com.ural.gui.windows.db.tabs.BasicTabView;
 import com.ural.gui.windows.db.tabs.SecurityTabView;
 import com.ural.manager.model.SettingsData;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;

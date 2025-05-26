@@ -1,5 +1,6 @@
 package com.ural.manager.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.ural.manager.model.Database;
 import com.ural.manager.model.MetaData;
@@ -11,7 +12,9 @@ import com.ural.security.encryption.service.CipherFactory;
 import com.ural.security.encryption.service.KeyGeneratorFactory;
 import com.ural.security.encryption.service.EncryptionService;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -62,11 +65,16 @@ public class DatabaseService {
     }
 
     public void saveChanges(Path path, Database database) {
-        String jsonFormat = serializer.serialize(database);
-        FileUtils.saveToFile(path, jsonFormat);
+        try {
+            String jsonFormat = serializer.serialize(database);
+            FileUtils.saveToFile(path, jsonFormat);
+        } catch (JsonProcessingException e) {
+            System.err.println("Ошибка при сохранении изменений в базе данных. " + e.getMessage());
+        }
+
     }
 
-    public Database loadDatabase(Path pathData) {
+    public Database loadDatabase(Path pathData) throws IOException {
         String jsonContent = FileUtils.readFile(pathData);
         return serializer.deserialize(jsonContent, new TypeReference<>() {
         });

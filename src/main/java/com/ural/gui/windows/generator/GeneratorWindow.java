@@ -6,6 +6,7 @@ import com.ural.gui.windows.generator.tabs.AdvancedTabView;
 import com.ural.gui.windows.generator.tabs.GeneratedPasswordsTaView;
 import com.ural.gui.windows.generator.tabs.SettingsTabView;
 import com.ural.manager.model.PasswordConfiguration;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;

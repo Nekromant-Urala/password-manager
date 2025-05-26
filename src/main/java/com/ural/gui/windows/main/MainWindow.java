@@ -2,7 +2,7 @@ package com.ural.gui.windows.main;
 
 import com.ural.gui.core.Window;
 import com.ural.manager.model.PasswordEntre;
-import com.ural.manager.serialization.JsonFileWatcher;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,10 +21,15 @@ import javafx.stage.Stage;
 public class MainWindow implements Window {
     private final MainHandler handler;
     private static final int COLUMN_WIDTH = 200;
+
     private static final String STYLE_ENTERED = "-fx-background-color: #e1f5fe;-fx-padding: 5px;-fx-border-radius: 3px;"; // светло-голубой
     private static final String STYLE_EXITED = "-fx-background-color: transparent;-fx-padding: 5px;-fx-border-radius: 3px;"; //
     private static final String STYLE_PRESSED = "-fx-background-color: #b3e5fc;-fx-padding: 5px;-fx-border-radius: 3px;";
     private static final String STYLE_BORDER_CONTAINER = "-fx-border-color: #a0a0a0;-fx-border-width: 1px;-fx-padding: 2px;-fx-border-insets: 2px;-fx-background-color: #FFFFFF;";
+
+    private static final int WINDOW_WIDTH = 1200;
+    private static final int WINDOW_HEIGHT = 700;
+
 
     public MainWindow() {
         this.handler = new MainHandler();
@@ -57,24 +62,15 @@ public class MainWindow implements Window {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
 
         // Столбец для вывода названия записи
-        TableColumn<PasswordEntre, String> nameColumn = createColumn("Название", "name");
-        table.getColumns().add(nameColumn);
-
+        setColumn(table, "Название", "name");
         // Столбец для вывода логина записи
-        TableColumn<PasswordEntre, String> loginColumn = createColumn("Логин", "login");
-        table.getColumns().add(loginColumn);
-
+        setColumn(table, "Логин", "login");
         // Столбец для вывода пароля
-        TableColumn<PasswordEntre, String> passwordColumn = createPasswordColumn("Пароль", "password");
-        table.getColumns().add(passwordColumn);
-
+        setColumn(table, "Пароль", "password");
         // Столбец для вывода сервиса
-        TableColumn<PasswordEntre, String> serviceColumn = createColumn("Сервис", "service");
-        table.getColumns().add(serviceColumn);
-
+        setColumn(table, "Сервис", "service");
         // Столбец для вывода заметок
-        TableColumn<PasswordEntre, String> notionColumn = createColumn("Заметки", "notion");
-        table.getColumns().add(notionColumn);
+        setColumn(table, "Заметки", "notion");
 
         // Поле для вывода подробной информации о записи
         HBox hBox = new HBox();
@@ -89,7 +85,7 @@ public class MainWindow implements Window {
         root.setCenter(table);
         root.setBottom(hBox);
 
-        Scene scene = new Scene(root, 1200, 700);
+        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         mainWindow.setScene(scene);
         mainWindow.setTitle("Hell Spring");
         mainWindow.setResizable(false);
@@ -98,6 +94,16 @@ public class MainWindow implements Window {
         setupContextMenu(mainWindow);
         setupActionOnLabel(mainWindow);
         mainWindow.show();
+    }
+
+    private void setColumn(TableView<PasswordEntre> table, String nameColumn, String field) {
+        TableColumn<PasswordEntre, String> notionColumn;
+        if (nameColumn.equals("Пароль")) {
+            notionColumn = createPasswordColumn(nameColumn, field);
+        } else {
+            notionColumn = createColumn(nameColumn, field);
+        }
+        table.getColumns().add(notionColumn);
     }
 
     private VBox createListGroups() {

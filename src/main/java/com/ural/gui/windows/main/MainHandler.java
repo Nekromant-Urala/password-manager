@@ -1,7 +1,6 @@
 package com.ural.gui.windows.main;
 
 import com.ural.gui.core.BaseHandlerEvent;
-import com.ural.gui.windows.db.CreationFileWindow;
 import com.ural.gui.windows.generator.GeneratorWindow;
 import com.ural.gui.windows.record.RecordWindow;
 import com.ural.manager.model.PasswordEntre;
@@ -15,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-
 
 public class MainHandler extends BaseHandlerEvent {
     private final PasswordEntreService passwordEntreService;
@@ -73,7 +71,7 @@ public class MainHandler extends BaseHandlerEvent {
         jsonFileWatcher.startWatching();
     }
 
-    ObservableList<PasswordEntre> loadPasswordEntries() {
+    private ObservableList<PasswordEntre> loadPasswordEntries() {
         return FXCollections.observableArrayList(passwordEntreService.getAllElements());
     }
 }

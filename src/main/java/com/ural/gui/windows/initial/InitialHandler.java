@@ -1,10 +1,11 @@
 package com.ural.gui.windows.initial;
 
-
 import com.ural.gui.core.BaseHandlerEvent;
+import com.ural.gui.windows.db.CreationFileWindow;
 import com.ural.gui.windows.main.MainWindow;
 import com.ural.manager.model.MasterPasswordHolder;
 import com.ural.manager.service.AuthService;
+
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -16,7 +17,6 @@ import java.util.Arrays;
 
 
 public class InitialHandler extends BaseHandlerEvent {
-    //    private static final MainWindow main = new MainWindow();
     private final AuthService authService;
 
     public InitialHandler() {
@@ -27,24 +27,32 @@ public class InitialHandler extends BaseHandlerEvent {
     public void successfulEvent(Stage stage) {
         // метод проверки пароля и переход на мейн окно
         char[] password = getPassword(stage);
-        if (authService.verifyPassword(password)) {
-            MasterPasswordHolder.setMasterPassword(password);
-            Arrays.fill(password, '\0');
-            new MainWindow().createWindow(stage);
-            stage.close();
-        } else {
-            showInfo();
+        switch (authService.verifyPassword(password)) {
+            case OK -> {
+                MasterPasswordHolder.setMasterPassword(password);
+                Arrays.fill(password, '\0');
+                new MainWindow().createWindow(stage);
+                stage.close();
+            }
+            case WRONG -> {
+                Alert alert = showInfo("Ошибка ввода", "Введен неправильный пароль");
+                alert.show();
+            }
+            case ERROR -> {
+                Alert alert = showInfo("Ошибка загрузки", "База данных по такому пути не существует");
+                alert.show();
+                alert.setOnCloseRequest(e -> new CreationFileWindow().createWindow(stage));
+            }
         }
     }
 
-    private void showInfo() {
+    private Alert showInfo(String tittle, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Ошибка ввода");
+        alert.setTitle(tittle);
         alert.setHeaderText(null);
-        alert.setContentText("Введен неправильный пароль");
-        alert.setWidth(270);
-        alert.setHeight(150);
-        alert.show();
+        alert.setContentText(message);
+        alert.setWidth(335);
+        return alert;
     }
 
     private char[] getPassword(Stage stage) {

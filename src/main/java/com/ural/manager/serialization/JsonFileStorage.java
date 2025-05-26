@@ -1,8 +1,10 @@
 package com.ural.manager.serialization;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.ural.manager.service.FileUtils;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,9 +19,15 @@ public class JsonFileStorage {
     }
 
     public void savePath(List<String> pathsList) {
-        FileUtils.createFileIfNotExists(CONFIG_FILE);
-        String paths = serializer.serialize(pathsList);
-        FileUtils.saveToFile(CONFIG_FILE, paths);
+        try {
+            FileUtils.createFileIfNotExists(CONFIG_FILE);
+            String paths = serializer.serialize(pathsList);
+            FileUtils.saveToFile(CONFIG_FILE, paths);
+        } catch (IOException e) {
+            System.err.println("Ошибка при работе с файлом:" + e.getMessage());
+        } catch (RuntimeException e) {
+            System.err.println("Ошибка сериализации объекта.");
+        }
     }
 
     public Path getAbsolutePath(String folder, String file) {
@@ -28,14 +36,32 @@ public class JsonFileStorage {
     }
 
     public List<String> loadPaths() {
-        if (!Files.exists(CONFIG_FILE)) {
-            FileUtils.createFileIfNotExists(CONFIG_FILE);
-            savePath(List.of());
+        try {
+            // 1. Проверяем существование файла и создаём его при необходимости
+            if (!Files.exists(CONFIG_FILE)) {
+                FileUtils.createFileIfNotExists(CONFIG_FILE);
+                savePath(List.of());
+                return List.of();
+            }
+
+            // 2. Читаем содержимое файла
+            String jsonValue = FileUtils.readFile(CONFIG_FILE);
+
+            // 3. Если файл пустой, возвращаем пустой список
+            if (jsonValue == null || jsonValue.trim().isEmpty()) {
+                return List.of();
+            }
+
+            // 4. Пытаемся десериализовать JSON
+            return serializer.deserialize(jsonValue, new TypeReference<>() {
+            });
+
+        } catch (IOException e) {
+            System.err.println("Ошибка при работе с файлом: " + e.getMessage());
+            return List.of();
+        } catch (RuntimeException e) {
+            System.err.println("Ошибка при парсинге JSON: " + e.getMessage());
+            return List.of();
         }
-        String jsonValue = FileUtils.readFile(CONFIG_FILE);
-        if (!jsonValue.isEmpty()) {
-            return serializer.deserialize(jsonValue, new TypeReference<>() {});
-        }
-        return List.of();
     }
 }

@@ -3,6 +3,7 @@ package com.ural.gui.windows.db.tabs;
 import com.ural.gui.core.TabView;
 import com.ural.gui.windows.db.CreationFileHandler;
 import com.ural.manager.model.SettingsData;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

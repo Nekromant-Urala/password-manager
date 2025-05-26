@@ -2,6 +2,7 @@ package com.ural.gui.windows.db.tabs;
 
 import com.ural.gui.core.TabView;
 import com.ural.manager.model.SettingsData;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;

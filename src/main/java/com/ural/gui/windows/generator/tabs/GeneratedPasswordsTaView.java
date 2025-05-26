@@ -1,8 +1,8 @@
 package com.ural.gui.windows.generator.tabs;
 
 import com.ural.gui.core.TabView;
+
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
