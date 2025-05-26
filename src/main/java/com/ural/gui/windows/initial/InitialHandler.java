@@ -25,8 +25,11 @@ public class InitialHandler extends BaseHandlerEvent {
 
     @Override
     public void successfulEvent(Stage stage) {
+        // метод для дешифрации базы данных
+
         // метод проверки пароля и переход на мейн окно
         char[] password = getPassword(stage);
+        MasterPasswordHolder.setMasterPassword(password);
         switch (authService.verifyPassword(password)) {
             case OK -> {
                 MasterPasswordHolder.setMasterPassword(password);

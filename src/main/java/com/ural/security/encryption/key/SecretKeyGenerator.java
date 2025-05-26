@@ -1,6 +1,11 @@
 package com.ural.security.encryption.key;
 
+import org.bouncycastle.openssl.EncryptionException;
+
 import javax.crypto.SecretKey;
+import java.security.KeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @FunctionalInterface
 public interface SecretKeyGenerator {
@@ -11,5 +16,5 @@ public interface SecretKeyGenerator {
      * @param algorithmName  наименование алгоритма, который применяется для шифрования данных
      * @return Возвращает секретный ключ необходимы для шифрования и дешифрования данных
      */
-    SecretKey generateSecretKey(char[] keyWord, byte[] salt, int iterationCount, String algorithmName) throws Exception;
+    SecretKey generateSecretKey(char[] keyWord, byte[] salt, int iterationCount, String algorithmName) throws KeyException, InvalidKeySpecException, NoSuchAlgorithmException;
 }

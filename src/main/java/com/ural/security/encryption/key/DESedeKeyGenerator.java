@@ -7,6 +7,9 @@ import javax.crypto.spec.DESedeKeySpec;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
 import static com.ural.security.encryption.spec.KeyGenerator.DES;
@@ -14,7 +17,7 @@ import static com.ural.security.encryption.spec.KeyGenerator.DES;
 public class DESedeKeyGenerator implements SecretKeyGenerator {
 
     @Override
-    public SecretKey generateSecretKey(char[] keyWord, byte[] salt, int iterationCount, String algorithmName) throws Exception {
+    public SecretKey generateSecretKey(char[] keyWord, byte[] salt, int iterationCount, String algorithmName) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] key = Arrays.copyOf(convertArray(keyWord), 24);
         DESedeKeySpec keySpec = new DESedeKeySpec(key);
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(DES.getMode());

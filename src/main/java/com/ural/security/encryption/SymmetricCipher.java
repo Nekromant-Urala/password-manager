@@ -1,8 +1,15 @@
 package com.ural.security.encryption;
 
 import com.ural.security.encryption.spec.AlgorithmSpec;
+import org.bouncycastle.openssl.EncryptionException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 public interface SymmetricCipher {
 
@@ -13,7 +20,7 @@ public interface SymmetricCipher {
      * @return Возвращает зашифрованный текст в виде массива байт
      * @throws Exception
      */
-    byte[] encrypt(byte[] byteArrayToEncrypt, SecretKey key, byte[] nonce) throws Exception;
+    byte[] encrypt(byte[] byteArrayToEncrypt, SecretKey key, byte[] nonce) throws EncryptionException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
 
     /**
      * @param byteArrayToDecrypt передаётся зашифрованная строка, которую необходимо расшифровать
@@ -22,7 +29,7 @@ public interface SymmetricCipher {
      * @return Возвращает расшифрованный текст в виде массива байт
      * @throws Exception
      */
-    byte[] decrypt(byte[] byteArrayToDecrypt, SecretKey key, byte[] nonce) throws Exception;
+    byte[] decrypt(byte[] byteArrayToDecrypt, SecretKey key, byte[] nonce) throws EncryptionException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
 
     /**
      * @return Возвращает название алгоритма в виде строки
