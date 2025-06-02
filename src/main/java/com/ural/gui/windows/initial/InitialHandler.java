@@ -45,6 +45,7 @@ public class InitialHandler extends BaseHandlerEvent {
                 Alert alert = showInfo("Ошибка загрузки", "База данных по такому пути не существует");
                 alert.show();
                 alert.setOnCloseRequest(e -> new CreationFileWindow().createWindow(stage));
+                stage.close();
             }
         }
     }

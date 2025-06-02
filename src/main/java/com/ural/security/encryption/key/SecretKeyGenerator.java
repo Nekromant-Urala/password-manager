@@ -1,6 +1,5 @@
 package com.ural.security.encryption.key;
 
-import org.bouncycastle.openssl.EncryptionException;
 
 import javax.crypto.SecretKey;
 import java.security.KeyException;

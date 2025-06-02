@@ -9,6 +9,7 @@ import com.ural.security.encryption.service.EncryptionService;
 import com.ural.security.encryption.service.KeyGeneratorFactory;
 
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public class AuthService {
         Database database;
         try {
             database = databaseService.loadDatabase(path);
-        } catch (IOException e) {
+        } catch (IOException | BufferUnderflowException e) {
             System.err.println("Ошибка при загрузке базы данных. " + e.getMessage());
             return StatusVerifyPassword.ERROR;
         }
