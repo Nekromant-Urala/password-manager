@@ -255,6 +255,7 @@ public class MainWindow implements Window {
         MenuItem generator = new MenuItem("Генератор");
         generator.setId("generator");
 
+        parameterDatabase.setOnAction(event -> handler.getCurrentParameters(stage));
         generator.setOnAction(event -> handler.openGeneratorPasswordWindow(stage));
         exitItemMenu.setOnAction(event -> handler.exitWindow(stage));
         addRecord.setOnAction(event -> handler.openRecordWindow(stage));

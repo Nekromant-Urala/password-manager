@@ -29,6 +29,67 @@ public abstract class Generator {
     }
 
     /**
+     * Метод для случайной выборки из строки заданного числа символов.
+     *
+     * @param inputString  Входная строка, из которой необходимо получить случайные символы.
+     * @param quantity     Количество символов, которое необходимо, чтобы присутствовало в пароле
+     * @param removeRepeat Метка, которая позволяет убрать повторяющиеся символы из генерированной строки
+     * @return Возвращает последовательность символов в формате строки.
+     */
+    protected static String generateRandomString(String inputString, int quantity, boolean removeRepeat) {
+        if (inputString == null || inputString.isEmpty()) {
+            throw new IllegalArgumentException("Invalid inputString");
+        }
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Invalid quantity");
+        }
+        StringBuilder symbols = new StringBuilder();
+        for (int i = 0; i < quantity; i++) {
+            int idx = secureRandom.nextInt(inputString.length());
+            if (removeRepeat) {
+                if (inputString.length() < quantity) {
+                    return inputString;
+                }
+                while (symbols.indexOf(String.valueOf(inputString.charAt(idx))) != -1) {
+                    idx = secureRandom.nextInt(inputString.length());
+                }
+            }
+            symbols.append(inputString.charAt(idx));
+        }
+
+        return symbols.toString();
+    }
+
+    /**
+     * Метод для случайной выборки из строки заданного числа символов
+     *
+     * @param inputString   Входная строка, из которой необходимо получить случайные символы
+     * @param quantity      Количество символов, которое необходимо, чтобы присутствовало в пароле
+     * @param removeSymbols Строка символов, которые необходимо удалить при генерации
+     * @return Возвращает последовательность символов в формате строки
+     */
+    protected static String generateRandomString(String inputString, int quantity, String removeSymbols) {
+        if (inputString == null || inputString.isEmpty()) {
+            throw new IllegalArgumentException("Invalid inputString");
+        }
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Invalid quantity");
+        }
+        StringBuilder symbols = new StringBuilder();
+        for (int i = 0; i < quantity; i++) {
+            int idx = secureRandom.nextInt(inputString.length());
+            if (!inputString.equals(removeSymbols)) {
+                while (removeSymbols.contains(String.valueOf(inputString.charAt(idx)))) {
+                    idx = secureRandom.nextInt(inputString.length());
+                }
+                symbols.append(inputString.charAt(idx));
+            }
+        }
+
+        return symbols.toString();
+    }
+
+    /**
      * Метод для перешивания последовательности в случайном порядке.
      *
      * @param password пароль, который нужно перемешать

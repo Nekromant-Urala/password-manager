@@ -57,6 +57,18 @@ public class AdvancedTabView implements TabView {
 
         advanced.setClosable(false);
         advanced.setContent(content);
+        setupBindings(prohibitionOfRepetition, symbolsField);
+
         return advanced;
+    }
+
+    private void setupBindings(CheckBox prohibitionOfRepetition, TextField symbolsField) {
+        prohibitionOfRepetition.selectedProperty().addListener((obs, oldValue, newValue) -> {
+            configuration.addRemoveRepetitions(newValue);
+        });
+
+        symbolsField.textProperty().addListener((obs, oldValue, newValue) -> {
+            configuration.addRemoveSymbols(newValue);
+        });
     }
 }

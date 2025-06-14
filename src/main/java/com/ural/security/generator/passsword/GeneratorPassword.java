@@ -5,36 +5,26 @@ import com.ural.security.generator.Generator;
 
 import java.security.SecureRandom;
 import java.util.LinkedList;
+import java.util.Map;
 
-import static com.ural.security.generator.passsword.Symbols.*;
 
 public class GeneratorPassword extends Generator {
     public String generatePassword(PasswordConfiguration configuration) {
         LinkedList<Integer> numberOfChars = generateRandomNumber(configuration.getLength(), configuration.getEnabledOptions());
         StringBuilder password = new StringBuilder(configuration.getLength());
-        if (configuration.isDigits() && !numberOfChars.isEmpty()) {
-            password.append(generateRandomString(DIGIT.getSymbols(), numberOfChars.poll()));
-        }
-        if (configuration.isLowerCase() && !numberOfChars.isEmpty()) {
-            password.append(generateRandomString(LOWERCASE.getSymbols(), numberOfChars.poll()));
-        }
-        if (configuration.isUpperCase() && !numberOfChars.isEmpty()) {
-            password.append(generateRandomString(UPPERCASE.getSymbols(), numberOfChars.poll()));
-        }
-        if (configuration.isMinus() && !numberOfChars.isEmpty()) {
-            password.append(generateRandomString(MINUS.getSymbols(), numberOfChars.poll()));
-        }
-        if (configuration.isSpace() && !numberOfChars.isEmpty()) {
-            password.append(generateRandomString(SPACE.getSymbols(), numberOfChars.poll()));
-        }
-        if (configuration.isStaples() && !numberOfChars.isEmpty()) {
-            password.append(generateRandomString(STAPLE.getSymbols(), numberOfChars.poll()));
-        }
-        if (configuration.isUnderscore() && !numberOfChars.isEmpty()) {
-            password.append(generateRandomString(UNDERSCORE.getSymbols(), numberOfChars.poll()));
-        }
-        if (configuration.isSpecialSymbols() && !numberOfChars.isEmpty()) {
-            password.append(generateRandomString(SPECIAL.getSymbols(), numberOfChars.poll()));
+
+        for (Map.Entry<Symbols, Boolean> symbols : configuration.getMap().entrySet()) {
+
+            if (symbols.getValue() && !numberOfChars.isEmpty()) {
+                int count = numberOfChars.pollFirst();
+                String symb = symbols.getKey().getSymbols();
+                if (configuration.isRemoveSymbols()) {
+                    password.append(generateRandomString(symb, count, configuration.getRemoveSymbols()));
+                } else {
+                    System.out.println(configuration.isRemoveRepetitions());
+                    password.append(generateRandomString(symb, count, configuration.isRemoveRepetitions()));
+                }
+            }
         }
 
         return shuffle(password.toString());

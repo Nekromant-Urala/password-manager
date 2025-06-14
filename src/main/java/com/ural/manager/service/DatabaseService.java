@@ -12,18 +12,16 @@ import com.ural.manager.serialization.Serializer;
 import com.ural.security.encryption.service.CipherFactory;
 import com.ural.security.encryption.service.KeyGeneratorFactory;
 import com.ural.security.encryption.service.EncryptionService;
-import com.ural.security.encryption.spec.CipherAlgorithm;
-import com.ural.security.encryption.spec.KeyGenerator;
 import org.bouncycastle.openssl.EncryptionException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.NoSuchFileException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyException;
 import java.security.NoSuchAlgorithmException;
@@ -59,6 +57,7 @@ public class DatabaseService {
                     .iterations(settings.getIterations())
                     .encryptedPasswordWithMeta(new String(encryptedPassword, StandardCharsets.UTF_8))
                     .keyGenerator(settings.getKeyGenerator())
+                    .description(settings.getDescription())
                     .build();
 
             Database db = new Database.Builder()
@@ -92,15 +91,18 @@ public class DatabaseService {
 
     }
 
-    public Database loadDatabase(Path pathData) throws IOException {
+    public Database loadDatabase(Path pathData) throws JsonProcessingException, FileNotFoundException {
         byte[] jsonContent = new byte[0];
         try {
             String encryptedJsonContent = FileUtils.readFile(pathData);
             jsonContent = EncryptionService.decryptDefault(encryptedJsonContent.getBytes(StandardCharsets.UTF_8), MasterPasswordHolder.getMasterPassword());
         } catch (KeyException | InvalidKeySpecException | NoSuchAlgorithmException |
                  InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException |
-                 BadPaddingException e) {
+                 BadPaddingException | IOException e) {
             System.err.println("Ошибка при дешифровании. " + e.getMessage());
+            if (!Files.exists(pathData)) {
+                throw new FileNotFoundException("Файл не был найден!");
+            }
         }
         return serializer.deserialize(new String(jsonContent), new TypeReference<>() {
         });

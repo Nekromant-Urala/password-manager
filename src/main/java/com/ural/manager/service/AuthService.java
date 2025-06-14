@@ -1,5 +1,6 @@
 package com.ural.manager.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ural.manager.status.StatusVerifyPassword;
 import com.ural.manager.model.Database;
 import com.ural.manager.model.MetaData;
@@ -8,6 +9,7 @@ import com.ural.security.encryption.service.CipherFactory;
 import com.ural.security.encryption.service.EncryptionService;
 import com.ural.security.encryption.service.KeyGeneratorFactory;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.file.Path;
@@ -29,9 +31,12 @@ public class AuthService {
         Database database;
         try {
             database = databaseService.loadDatabase(path);
-        } catch (IOException | BufferUnderflowException e) {
+        } catch (FileNotFoundException | BufferUnderflowException e) {
             System.err.println("Ошибка при загрузке базы данных. " + e.getMessage());
             return StatusVerifyPassword.ERROR;
+        } catch (JsonProcessingException e) {
+            System.err.println("Ошибка при загрузке базы данных. " + e.getMessage());
+            return StatusVerifyPassword.WRONG;
         }
         MetaData metaData = database.getMetaData();
         // получаем данные, из json для генерации хеша для сравнения

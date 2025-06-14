@@ -20,8 +20,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class GeneratorWindow implements Window {
-    private static final int HEIGHT = 280;
-    private static final int WIDTH = 450;
+    private static final int WINDOW_HEIGHT = 280;
+    private static final int WINDOW_WIDTH = 450;
 
     private final GeneratorHandler handler;
     private final PasswordConfiguration.Builder configuration;
@@ -71,11 +71,11 @@ public class GeneratorWindow implements Window {
                 buttonContainer
         );
 
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         generatorStage.setScene(scene);
         generatorStage.setResizable(false);
         // установка привязок
-        setHandler(generatorStage);
+        setupHandler(generatorStage);
         generatorStage.show();
     }
 
@@ -95,7 +95,7 @@ public class GeneratorWindow implements Window {
         return container;
     }
 
-    private void setHandler(Stage stage) {
+    private void setupHandler(Stage stage) {
         Parent root = stage.getScene().getRoot();
         Button exitButton = (Button) root.lookup("#exitButton");
         Button okButton = (Button) root.lookup("#okButton");
