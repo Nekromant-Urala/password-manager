@@ -28,11 +28,6 @@ public class Database {
             return this;
         }
 
-        public Builder addEntre(PasswordEntre entre) {
-            database.entries.add(entre);
-            return this;
-        }
-
         public Builder addEntries(List<PasswordEntre> entries) {
             database.entries = entries;
             return this;
@@ -53,5 +48,12 @@ public class Database {
 
     public List<PasswordEntre> getEntries() {
         return entries;
+    }
+
+    public Builder toBuilder(){
+        return new Builder()
+                .addVersion(this.version)
+                .addMetaData(this.metaData)
+                .addEntries(this.entries);
     }
 }

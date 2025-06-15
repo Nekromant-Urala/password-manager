@@ -6,6 +6,7 @@ public class MetaData {
     private int iterations;
     private String encryptedPasswordWithMeta;
     private String nameDatabase;
+    private String description;
 
     private MetaData() {
     }
@@ -24,6 +25,11 @@ public class MetaData {
 
         public Builder keyGenerator(String keyGenerator) {
             metaData.keyGenerator = keyGenerator;
+            return this;
+        }
+
+        public Builder description(String description) {
+            metaData.description = description;
             return this;
         }
 
@@ -66,5 +72,19 @@ public class MetaData {
 
     public String getNameDatabase() {
         return nameDatabase;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Builder toBuilder() {
+        return new Builder()
+                .encryptAlgorithm(this.encryptAlgorithm)
+                .keyGenerator(this.keyGenerator)
+                .description(this.description)
+                .iterations(this.iterations)
+                .encryptedPasswordWithMeta(this.encryptedPasswordWithMeta)
+                .nameDatabase(this.nameDatabase);
     }
 }

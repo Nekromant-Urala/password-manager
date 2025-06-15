@@ -120,4 +120,13 @@ public class BaseHandlerEvent {
         spinner.setEditable(true);
         return spinner;
     }
+
+    protected char[] getPassword(Stage stage) {
+        Parent root = stage.getScene().getRoot();
+        PasswordField passwordField = (PasswordField) root.lookup("#passwordField");
+        TextField visiblePasswordField = (TextField) root.lookup("#visiblePasswordField");
+        return passwordField.getText().isEmpty()
+                ? visiblePasswordField.getText().toCharArray()
+                : passwordField.getText().toCharArray();
+    }
 }

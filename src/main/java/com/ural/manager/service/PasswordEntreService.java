@@ -11,12 +11,22 @@ import com.ural.security.encryption.service.KeyGeneratorFactory;
 import javafx.application.Platform;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import org.bouncycastle.openssl.EncryptionException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PasswordEntreService {
     private final DatabaseService databaseService;
@@ -114,6 +124,23 @@ public class PasswordEntreService {
         }
     }
 
+    public List<PasswordEntre> updateKeyForEntries(char[] key) {
+        List<PasswordEntre> entries = getAllElements();
+        Stream<PasswordEntre> entreStream = entries.stream().map(entre -> {
+            try {
+                byte[] password = encryptionService.decrypt(entre.getPassword().getBytes(StandardCharsets.UTF_8), MasterPasswordHolder.getMasterPassword());
+                byte[] encryptPassword = encryptionService.encrypt(password, key);
+                entre = entre.toBuilder().addPassword(new String(encryptPassword, StandardCharsets.UTF_8)).build();
+            } catch (InvalidAlgorithmParameterException | EncryptionException | NoSuchPaddingException |
+                     IllegalBlockSizeException | InvalidKeySpecException | NoSuchAlgorithmException |
+                     BadPaddingException |
+                     KeyException e) {
+                System.err.println("Ошибка при шифровании паролей! " + e.getMessage());
+            }
+            return entre;
+        });
+        return entreStream.collect(Collectors.toList());
+    }
 
     public List<PasswordEntre> getAllElements() {
         try {

@@ -70,6 +70,16 @@ public class PasswordEntre {
         }
     }
 
+    public Builder toBuilder() {
+        return new Builder()
+                .addName(this.name)
+                .addGroup(this.group)
+                .addService(this.service)
+                .addLogin(this.login)
+                .addPassword(this.password)
+                .addNotion(this.notion);
+    }
+
     public String getName() {
         return name;
     }

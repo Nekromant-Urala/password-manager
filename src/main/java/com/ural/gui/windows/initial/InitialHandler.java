@@ -25,8 +25,6 @@ public class InitialHandler extends BaseHandlerEvent {
 
     @Override
     public void successfulEvent(Stage stage) {
-        // метод для дешифрации базы данных
-
         // метод проверки пароля и переход на мейн окно
         char[] password = getPassword(stage);
         MasterPasswordHolder.setMasterPassword(password);
@@ -45,6 +43,7 @@ public class InitialHandler extends BaseHandlerEvent {
                 Alert alert = showInfo("Ошибка загрузки", "База данных по такому пути не существует");
                 alert.show();
                 alert.setOnCloseRequest(e -> new CreationFileWindow().createWindow(stage));
+                stage.close();
             }
         }
     }
@@ -56,15 +55,6 @@ public class InitialHandler extends BaseHandlerEvent {
         alert.setContentText(message);
         alert.setWidth(335);
         return alert;
-    }
-
-    private char[] getPassword(Stage stage) {
-        Parent root = stage.getScene().getRoot();
-        PasswordField passwordField = (PasswordField) root.lookup("#passwordField");
-        TextField visiblePasswordField = (TextField) root.lookup("#visiblePasswordField");
-        return passwordField.getText().isEmpty()
-                ? visiblePasswordField.getText().toCharArray()
-                : passwordField.getText().toCharArray();
     }
 
     @Override

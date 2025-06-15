@@ -1,7 +1,8 @@
 package com.ural.manager.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.ural.security.generator.passsword.Symbols;
+
+import java.util.*;
 
 public class PasswordConfiguration {
     private static final int DEFAULT_LENGTH = 20;
@@ -16,11 +17,26 @@ public class PasswordConfiguration {
     private boolean specialSymbols;
     private boolean staples;
 
+    private boolean removeRepetitions;
+    private String removeSymbols;
+
+    private HashMap<Symbols, Boolean> map = new HashMap<>();
+
     public static class Builder {
         private PasswordConfiguration config;
 
         public Builder() {
             this.config = new PasswordConfiguration();
+        }
+
+        public Builder addRemoveRepetitions(boolean repeats) {
+            config.removeRepetitions = repeats;
+            return this;
+        }
+
+        public Builder addRemoveSymbols(String symbols) {
+            config.removeSymbols = symbols;
+            return this;
         }
 
         public Builder addLength(int length) {
@@ -88,7 +104,32 @@ public class PasswordConfiguration {
         if (isSpecialSymbols()) count++;
         if (isStaples()) count++;
 
+        map.put(Symbols.LOWERCASE, isLowerCase());
+        map.put(Symbols.UPPERCASE, isUpperCase());
+        map.put(Symbols.DIGIT, isDigits());
+        map.put(Symbols.MINUS, isMinus());
+        map.put(Symbols.UNDERSCORE, isUnderscore());
+        map.put(Symbols.SPACE, isSpace());
+        map.put(Symbols.SPECIAL, isSpecialSymbols());
+        map.put(Symbols.STAPLE, isStaples());
+
         return count;
+    }
+
+    public Map<Symbols, Boolean> getMap() {
+        return Collections.unmodifiableMap(map);
+    }
+
+    public boolean isRemoveRepetitions() {
+        return removeRepetitions;
+    }
+
+    public boolean isRemoveSymbols() {
+        return removeSymbols != null;
+    }
+
+    public String getRemoveSymbols() {
+        return removeSymbols;
     }
 
     public int getLength() {
