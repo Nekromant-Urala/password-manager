@@ -88,7 +88,6 @@ public class DatabaseService {
                  IllegalBlockSizeException | BadPaddingException e) {
             System.err.println("Ошибка при сохранении изменений в базе данных. " + e.getMessage());
         }
-
     }
 
     public Database loadDatabase(Path pathData) throws JsonProcessingException, FileNotFoundException {

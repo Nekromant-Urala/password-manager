@@ -1,9 +1,11 @@
 package com.ural.gui.windows.main;
 
 import com.ural.gui.core.BaseHandlerEvent;
+import com.ural.gui.windows.chang.ChangPasswordWindow;
 import com.ural.gui.windows.generator.GeneratorWindow;
 import com.ural.gui.windows.record.RecordWindow;
 import com.ural.gui.windows.settings.SettingsWindow;
+import com.ural.manager.model.MasterPasswordHolder;
 import com.ural.manager.model.PasswordEntre;
 import com.ural.manager.serialization.JsonFileStorage;
 import com.ural.manager.serialization.JsonFileWatcher;
@@ -35,8 +37,10 @@ public class MainHandler extends BaseHandlerEvent {
 
     void exitWindow(Stage stage) {
         jsonFileWatcher.stopWatching();
+        MasterPasswordHolder.clear();
         stage.close();
         Platform.exit();
+        System.exit(0);
     }
 
     void filterByGroups(Stage stage, String nameGroup) {
@@ -63,6 +67,10 @@ public class MainHandler extends BaseHandlerEvent {
 
     void getCurrentParameters(Stage stage) {
         new SettingsWindow().createWindow(stage);
+    }
+
+    void editMasterPassword(Stage stage){
+        new ChangPasswordWindow().createWindow(stage);
     }
 
     void startWatch(Stage stage) {

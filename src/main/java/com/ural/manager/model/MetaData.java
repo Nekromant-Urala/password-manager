@@ -77,4 +77,14 @@ public class MetaData {
     public String getDescription() {
         return description;
     }
+
+    public Builder toBuilder() {
+        return new Builder()
+                .encryptAlgorithm(this.encryptAlgorithm)
+                .keyGenerator(this.keyGenerator)
+                .description(this.description)
+                .iterations(this.iterations)
+                .encryptedPasswordWithMeta(this.encryptedPasswordWithMeta)
+                .nameDatabase(this.nameDatabase);
+    }
 }

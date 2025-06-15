@@ -255,6 +255,7 @@ public class MainWindow implements Window {
         MenuItem generator = new MenuItem("Генератор");
         generator.setId("generator");
 
+        editMasterPassword.setOnAction(event -> handler.editMasterPassword(stage));
         parameterDatabase.setOnAction(event -> handler.getCurrentParameters(stage));
         generator.setOnAction(event -> handler.openGeneratorPasswordWindow(stage));
         exitItemMenu.setOnAction(event -> handler.exitWindow(stage));
@@ -282,8 +283,8 @@ public class MainWindow implements Window {
     }
 
     private void setupHandler(Stage stage) {
-        stage.setOnCloseRequest(event -> handler.exitWindow(stage));
         handler.startWatch(stage);
+        stage.setOnCloseRequest(event -> handler.exitWindow(stage));
     }
 
     private TableColumn<PasswordEntre, String> createPasswordColumn(String nameColumn, String field) {
